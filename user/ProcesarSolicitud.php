@@ -17,9 +17,8 @@ if (isset($_POST["enviar"])) {
     $jsonsistemas = json_encode($sistemas);
 
 
-    echo $jsonsistemas;
-
-    /*if (
+    
+    if (
         !empty($tipoDocumento) && !empty($nDocumento) && !empty($nombres) &&
         !empty($apellidos) && !empty($telefono) && !empty($correo) && !empty($cargo) &&
         !empty($jsonsistemas) && !empty($nombreUsuCopia) &&
@@ -51,5 +50,5 @@ if (isset($_POST["enviar"])) {
         }
     } else {
         echo "Datos vacios";
-    }*/
+    }
 }
