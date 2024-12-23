@@ -53,7 +53,7 @@ if (!isset($_SESSION['id_usuario'])) {
                                     <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
                                         <div class="card">
                                             <div class="card-body">
-                                                <form action="ProcesarSolicitud.php" method="POST">
+                                                <form action="ProcesarSolicitudAdmin.php" method="POST">
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <label for="settingsState" class="form-label">Tipo de Documento</label>

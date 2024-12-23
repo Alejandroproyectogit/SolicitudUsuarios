@@ -53,11 +53,11 @@ if (!isset($_SESSION['id_usuario'])) {
                                     <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
                                         <div class="card">
                                             <div class="card-body">
-                                                <form>
+                                                <form action="ProcesarSolicitudUsuarios.php" method="POST">
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <label for="settingsState" class="form-label">Tipo de Documento</label>
-                                                            <select class="js-states form-control" id="settingsState" tabindex="-1" style="width: 100%">
+                                                            <select class="js-states form-control" id="settingsState" name="tipoDocumento" tabindex="-1" style="width: 100%">
                                                                 <option value="CC">CC</option>
                                                                 <option value="TI">TI</option>
                                                                 <option value="CE">CE</option>
@@ -65,34 +65,34 @@ if (!isset($_SESSION['id_usuario'])) {
                                                             </select>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <label for="settingsPhoneNumber" class="form-label">Telefono</label>
-                                                            <input type="text" class="form-control" id="settingsPhoneNumber" placeholder="(xxx) xxx-xxxx" required>
+                                                            <label for="settingsPhoneNumber" class="form-label">Documento</label>
+                                                            <input type="text" class="form-control" id="settingsPhoneNumber" name="nDocumento" placeholder="xxxxxxxxxx" required>
                                                         </div>
                                                     </div>
                                                     <div class="row m-t-lg">
                                                         <div class="col-md-6">
                                                             <label for="settingsInputFirstName" class="form-label">Nombres</label>
-                                                            <input type="text" class="form-control" id="settingsInputFirstName" required>
+                                                            <input type="text" class="form-control" id="settingsInputFirstName" name="nombres" required>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="settingsInputLastName" class="form-label">Apellidos</label>
-                                                            <input type="text" class="form-control" id="settingsInputLastName" required>
+                                                            <input type="text" class="form-control" id="settingsInputLastName" name="apellidos" required>
                                                         </div>
                                                     </div>
                                                     <div class="row m-t-lg">
                                                         <div class="col-md-6">
                                                             <label for="settingsPhoneNumber" class="form-label">Telefono</label>
-                                                            <input type="text" class="form-control" id="settingsPhoneNumber" placeholder="(xxx) xxx-xxxx" required>
+                                                            <input type="text" class="form-control" id="settingsPhoneNumber" name="telefono" placeholder="(xxx) xxx-xxxx" required>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="settingsInputEmail" class="form-label">Correo</label>
-                                                            <input type="email" class="form-control" id="settingsInputEmail" aria-describedby="settingsEmailHelp" placeholder="example@email.com">
+                                                            <input type="email" class="form-control" id="settingsInputEmail" name="correo" aria-describedby="settingsEmailHelp" placeholder="example@email.com">
                                                         </div>
                                                     </div>
                                                     <div class="row m-t-lg">
                                                         <div class="col-md-6">
                                                             <label for="settingsPhoneNumber" class="form-label">Cargo</label>
-                                                            <input type="text" class="form-control" id="settingsPhoneNumber" required>
+                                                            <input type="text" class="form-control" id="settingsPhoneNumber" name="cargo" required>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="settingsInputEmail" class="form-label">Seleccione</label><br>
@@ -108,19 +108,19 @@ if (!isset($_SESSION['id_usuario'])) {
                                                     <div class="row m-t-lg">
                                                         <div class="col-md-6">
                                                             <label for="settingsInputFirstName" class="form-label">Nombre del Usuario a Copiar</label>
-                                                            <input type="text" class="form-control" id="settingsInputFirstName" required>
+                                                            <input type="text" class="form-control" id="settingsInputFirstName" name="nombreUsuCopia" required>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="settingsPhoneNumber" class="form-label">Documento del Usuario a Copiar</label>
-                                                            <input type="text" class="form-control" id="settingsPhoneNumber" placeholder="xxxxxxxxxx" required>
+                                                            <input type="text" class="form-control" id="settingsPhoneNumber" name="documentoUsuCopia" placeholder="xxxxxxxxxx" required>
                                                         </div>
                                                     </div>
-                                                    <input type="text" class="" id="" value="" hidden>
-                                                    <input type="text" class="" id="" value="PENDIENTE" hidden>
+                                                    <input type="text" name="solicitante" value="<?php echo $_SESSION["id_usuario"];?>" hidden>
+                                                    <input type="text" name="estado" value="PENDIENTE" hidden>
                                                     <div class="row m-t-lg">
                                                         <div class="col">
 
-                                                            <a href="#" class="btn btn-primary m-t-sm">Update</a>
+                                                            <button type="submit" name="enviar" class="btn btn-primary m-t-sm">Solicitar</button>
                                                         </div>
                                                     </div>
                                                 </form>

@@ -8,21 +8,26 @@ if (!empty($usuario) && !empty($pass)) {
     $stmt->execute();
     $result=$stmt->fetch();
 
-    if ($result > 0) {
-        if (($result["usuario"] == $usuario)&&($result["contrasena"] == $pass)&&($result["id_rol"] == 1)) {
-            $_SESSION['id_usuario'] = $result["id"];
-            $_SESSION['usuario'] = $result["usuario"];
-            $_SESSION['nombre'] = $result["nombre"];
-            $_SESSION['id_rol'] = $result["id_rol"];
-            header("location: user/vistaAdmin.php");
-            exit();
-        }elseif (($result["usuario"] == $usuario)&&($result["contrasena"] == $pass)&&($result["id_rol"] == 2)) {
-            $_SESSION['id_usuario'] = $result["id"];
-            $_SESSION['usuario'] = $result["usuario"];
-            $_SESSION['nombre'] = $result["nombre"];
-            $_SESSION['id_rol'] = $result["id_rol"];
-            header("location: user/vistaUsuarios.php");
-            exit();
+   if ($result) {
+
+        $hash_pass = $result["contrasena"];
+
+        if (password_verify($pass,$hash_pass)) {
+            if ($result["id_rol"] == 1) {
+                $_SESSION['id_usuario'] = $result["id"];
+                $_SESSION['usuario'] = $result["usuario"];
+                $_SESSION['nombre'] = $result["nombre"];
+                $_SESSION['id_rol'] = $result["id_rol"];
+                header("location: user/vistaAdmin.php");
+                exit();
+            }elseif ($result["id_rol"] == 2) {
+                $_SESSION['id_usuario'] = $result["id"];
+                $_SESSION['usuario'] = $result["usuario"];
+                $_SESSION['nombre'] = $result["nombre"];
+                $_SESSION['id_rol'] = $result["id_rol"];
+                header("location: user/vistaUsuarios.php");
+                exit();
+            }
         } else {
             header("location: ../app/login.php?error=1");
         }
@@ -31,7 +36,7 @@ if (!empty($usuario) && !empty($pass)) {
     }
 
 }else{
-    echo "<p id='hola'>Ingresa Usuario y contraseña</p>";
-    
+    echo "<p>Ingresa Usuario y contraseña</p>";
 }
+    
 ?>
