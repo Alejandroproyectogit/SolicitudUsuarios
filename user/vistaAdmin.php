@@ -78,56 +78,62 @@ $resultado = $ver->fetchAll();
                             <div class="card">
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table id="datatable1" class="table" class="display" style="width:100%">
-                                            <thead>
-                                                <tr>
-                                                    <td>#</td>
-                                                    <td>Tipo de Documento</td>
-                                                    <td>Documento</td>
-                                                    <td>Nombre</td>
-                                                    <td>Apellidos</td>
-                                                    <td>Telefono</td>
-                                                    <td>Correo</td>
-                                                    <td>Cargo</td>
-                                                    <td>Sistemas requerido</td>
-                                                    <td>Usuario a Copiar</td>
-                                                    <td>Documento</td>
-                                                    <td>Quien Solicita</td>
-                                                    <td>Estado</td>
-                                                    <td>Acción</td>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php if (!empty($resultado)): ?>
-                                                    <?php foreach ($resultado as $fila): ?>
-                                                        <?php if ($fila["estado"] === "PENDIENTE"): ?>
-                                                            <tr>
-                                                                <td><?php echo $fila["id_solicitud"]; ?></td>
-                                                                <td><?php echo $fila["tipoDocumento"]; ?></td>
-                                                                <td><?php echo $fila["documento"]; ?></td>
-                                                                <td><?php echo $fila["nombres"]; ?></td>
-                                                                <td><?php echo $fila["apellidos"]; ?></td>
-                                                                <td><?php echo $fila["telefono"]; ?></td>
-                                                                <td><?php echo $fila["correo"]; ?></td>
-                                                                <td><?php echo $fila["cargo"]; ?></td>
-                                                                <td><?php echo $fila["nombreSistema"]; ?></td>
-                                                                <td><?php echo $fila["nombreUsuarioCopia"]; ?></td>
-                                                                <td><?php echo $fila["documentoUsuCopia"]; ?></td>
-                                                                <td><?php echo $fila["nombre"]; ?></td>
-                                                                <td><?php echo $fila["estado"]; ?></td>
-                                                                <td>
-                                                                    <form action="cambioEstado.php" method="POST">
-                                                                        <button type="submit" class="btn btn-success align-middle" id="cambioEstado" name="cambioEstado" value="<?php echo $fila['id_solicitud']; ?>"><i class="bi bi-check"></i></button>
-                                                                    </form>
-                                                                </td>
-                                                            </tr>
-                                                        <?php endif; ?>
-                                                    <?php endforeach; ?>
-                                                <?php endif; ?>
-                                            </tbody>
+                                        <div id="table-refresh">
+                                            <table id="datatable1" class="table display" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <td>#</td>
+                                                        <td>Tipo de Documento</td>
+                                                        <td>Documento</td>
+                                                        <td>Nombre</td>
+                                                        <td>Apellidos</td>
+                                                        <td>Telefono</td>
+                                                        <td>Correo</td>
+                                                        <td>Cargo</td>
+                                                        <td>Sistemas requerido</td>
+                                                        <td>Usuario a Copiar</td>
+                                                        <td>Documento</td>
+                                                        <td>Quien Solicita</td>
+                                                        <td>Estado</td>
+                                                        <td>Acción</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php if (!empty($resultado)): ?>
+                                                        <?php foreach ($resultado as $fila): ?>
+                                                            <?php if ($fila["estado"] === "PENDIENTE"): ?>
+                                                                <tr>
+                                                                    <td><?php echo $fila["id_solicitud"]; ?></td>
+                                                                    <td><?php echo $fila["tipoDocumento"]; ?></td>
+                                                                    <td><?php echo $fila["documento"]; ?></td>
+                                                                    <td><?php echo $fila["nombres"]; ?></td>
+                                                                    <td><?php echo $fila["apellidos"]; ?></td>
+                                                                    <td><?php echo $fila["telefono"]; ?></td>
+                                                                    <td><?php echo $fila["correo"]; ?></td>
+                                                                    <td><?php echo $fila["cargo"]; ?></td>
+                                                                    <td><?php echo $fila["nombreSistema"]; ?></td>
+                                                                    <td><?php echo $fila["nombreUsuarioCopia"]; ?></td>
+                                                                    <td><?php echo $fila["documentoUsuCopia"]; ?></td>
+                                                                    <td><?php echo $fila["nombre"]; ?></td>
+                                                                    <td><?php echo $fila["estado"]; ?></td>
+                                                                    <td>
+                                                                        <form id="cambioEstado">
+                                                                            <input id="cambio" name="cambio" value="<?php echo $fila['id_solicitud']; ?>" hidden>
+                                                                            <button type="submit" class="btn btn-success align-middle"><i class="bi bi-check"></i></button>
+                                                                        </form>
+                                                                        <!--<form action="deleteSolicitudAdmin.php" method="POST">
+                                                                            <button type="submit" class="btn btn-danger align-middle" id="eliminarSolicitud" name="eliminarSolicitud" value="<?php echo $fila['id_solicitud']; ?>"><i class="bi bi-trash-fill"></i></button>
+                                                                        </form>-->
+                                                                    </td>
+                                                                </tr>
+                                                            <?php endif; ?>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
+                                                </tbody>
 
 
-                                        </table>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -140,6 +146,32 @@ $resultado = $ver->fetchAll();
     </div>
 
     <!-- Javascripts -->
+    <script type="text/javascript">
+        const estado = document.getElementById("cambioEstado");
+
+        estado.addEventListener("submit", function (evento){
+            evento.preventDefault();
+
+            const idEstado = new FormData(evento.target);
+            const idEnviado = Object.fromEntries(idEstado.entries());
+
+            fetch("cambioEstado.php",{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(idEnviado),
+            })
+                .then((response) => response.json())
+                .then((resultado) => {
+
+                    alert(resultado.message);
+
+                })
+                .catch((error) => console.error("error: ",error));
+        });
+
+    </script>
     <script src="../assets/plugins/jquery/jquery-3.5.1.min.js"></script>
     <script src="../assets/plugins/bootstrap/js/popper.min.js"></script>
     <script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
@@ -157,6 +189,9 @@ $resultado = $ver->fetchAll();
             }
         });
     </script>
+
+    
+    
 </body>
 
 </html>

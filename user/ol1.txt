@@ -1,0 +1,25 @@
+<script>
+        // Función para recargar la tabla
+        function recargarTabla() {
+            fetch('https://api.example.com/obtenerDatos')  // Aquí iría la URL del servidor
+                .then(response => response.json())  // Suponiendo que el servidor devuelve datos en formato JSON
+                .then(datos => {
+                    // Obtén el cuerpo de la tabla
+                    const tablaCuerpo = document.querySelector('#miTabla tbody');
+                    // Limpia la tabla antes de agregar nuevas filas
+                    tablaCuerpo.innerHTML = '';
+
+                    // Recorre los datos y crea nuevas filas
+                    datos.forEach(dato => {
+                        const fila = document.createElement('tr');
+                        fila.innerHTML = `
+                            <td>${dato.nombre}</td>
+                            <td>${dato.edad}</td>
+                            <td>${dato.ciudad}</td>
+                        `;
+                        tablaCuerpo.appendChild(fila);  // Agrega la fila a la tabla
+                    });
+                })
+                .catch(error => console.error('Error al cargar los datos:', error));
+        }
+    </script>
