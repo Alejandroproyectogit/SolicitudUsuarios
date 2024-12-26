@@ -35,7 +35,7 @@ $resultado = $ver->fetchAll();
 <html lang="en">
 
 <head>
-    <?php require "../secciones/head.php";?>
+    <?php require "../secciones/head.php"; ?>
 </head>
 
 <body>
@@ -45,14 +45,14 @@ $resultado = $ver->fetchAll();
                 <a href="#" class="logo-icon"><span class="logo-text">Clinaltec</span></a>
                 <div class="sidebar-user-switcher user-activity-online">
                     <a href="#">
-                        
-                        <span class="user-info-text">Bienvenid@ <?php echo $_SESSION['nombre'];?>  <br><span class="user-state-info">Administrador</span><span class="activity-indicator"></span></span>
+
+                        <span class="user-info-text">Bienvenid@ <?php echo $_SESSION['nombre']; ?> <br><span class="user-state-info">Administrador</span><span class="activity-indicator"></span></span>
                     </a>
                 </div>
             </div>
         </div>
         <div class="app-container">
-            
+
             <?php require "../secciones/headerAdmin.php"; ?>
             <div class="app-content">
                 <div class="content-wrapper">
@@ -71,7 +71,8 @@ $resultado = $ver->fetchAll();
                     </div>
                     <div class="divider"></div>
                     <?php if (!empty($_GET["success"]) == 1) {
-                        echo "<div class='alert alert-success' role='alert'>Usuario Creado</div>";} 
+                        echo "<div class='alert alert-success' role='alert'>Usuario Creado</div>";
+                    }
                     ?>
                     <div class="row">
                         <div class="col">
@@ -117,10 +118,11 @@ $resultado = $ver->fetchAll();
                                                                     <td><?php echo $fila["nombre"]; ?></td>
                                                                     <td><?php echo $fila["estado"]; ?></td>
                                                                     <td>
-                                                                        <form id="cambioEstado">
-                                                                            <input id="cambio" name="cambio" value="<?php echo $fila['id_solicitud']; ?>" hidden>
+                                                                        <form class="cambioEstado">
+                                                                            <input name="cambio" value="<?php echo $fila['id_solicitud']; ?>" hidden>
                                                                             <button type="submit" class="btn btn-success align-middle"><i class="bi bi-check"></i></button>
                                                                         </form>
+
                                                                         <!--<form action="deleteSolicitudAdmin.php" method="POST">
                                                                             <button type="submit" class="btn btn-danger align-middle" id="eliminarSolicitud" name="eliminarSolicitud" value="<?php echo $fila['id_solicitud']; ?>"><i class="bi bi-trash-fill"></i></button>
                                                                         </form>-->
@@ -146,31 +148,37 @@ $resultado = $ver->fetchAll();
     </div>
 
     <!-- Javascripts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript">
-        const estado = document.getElementById("cambioEstado");
+        const formularios = document.querySelectorAll(".cambioEstado");
 
-        estado.addEventListener("submit", function (evento){
-            evento.preventDefault();
+        formularios.forEach((formulario) => {
+            formulario.addEventListener("submit", function(evento) {
+                evento.preventDefault();
 
-            const idEstado = new FormData(evento.target);
-            const idEnviado = Object.fromEntries(idEstado.entries());
+                const idEstado = new FormData(evento.target);
+                const idEnviado = Object.fromEntries(idEstado.entries());
 
-            fetch("cambioEstado.php",{
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(idEnviado),
-            })
-                .then((response) => response.json())
-                .then((resultado) => {
-
-                    alert(resultado.message);
-
-                })
-                .catch((error) => console.error("error: ",error));
+                fetch("cambioEstado.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(idEnviado),
+                    })
+                    .then((response) => response.json())
+                    .then((resultado) => {
+                        Swal.fire({
+                            title: "EXITO",
+                            text: resultado.message,
+                            icon: "success"
+                        }).then(() => {
+                            location.reload();
+                        });
+                    })
+                    .catch((error) => console.error("error: ", error));
+            });
         });
-
     </script>
     <script src="../assets/plugins/jquery/jquery-3.5.1.min.js"></script>
     <script src="../assets/plugins/bootstrap/js/popper.min.js"></script>
@@ -190,8 +198,8 @@ $resultado = $ver->fetchAll();
         });
     </script>
 
-    
-    
+
+
 </body>
 
 </html>

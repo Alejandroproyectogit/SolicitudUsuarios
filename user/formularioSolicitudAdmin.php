@@ -53,7 +53,7 @@ if (!isset($_SESSION['id_usuario'])) {
                                     <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
                                         <div class="card">
                                             <div class="card-body">
-                                                <form action="ProcesarSolicitudAdmin.php" method="POST">
+                                                <form id="crearSolicitudAdmin">
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <label for="settingsState" class="form-label">Tipo de Documento</label>
@@ -145,6 +145,32 @@ if (!isset($_SESSION['id_usuario'])) {
     <script src="../assets/plugins/highlight/highlight.pack.js"></script>
     <script src="../assets/js/main.min.js"></script>
     <script src="../assets/js/custom.js"></script>
+    <script type="text/javascript">
+        const formulario = document.getElementById("crearSolicitudAdmin");
+
+        formulario.addEventListener("submit", function (evento){
+            evento.preventDefault();
+
+            const datosFormulario = new FormData(evento.target);
+            const datosEnviados = Object.fromEntries(datosFormulario.entries());
+
+            fetch("ProcesarSolicitudAdmin.php",{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(datosEnviados),
+            })
+                .then((response) => response.json())
+                .then((resultado) => {
+
+                    alert(resultado.message);
+
+                })
+                .catch((error) => console.error("error: ",error));
+        });
+
+    </script>
 </body>
 
 </html>
