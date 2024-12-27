@@ -9,12 +9,29 @@ if (!isset($_SESSION['id_usuario'])) {
 
 
 require "../conexion/conexion.php";
-$ver = $con->prepare("SELECT 
-                        s.id_solicitud, s.tipoDocumento, s.documento, s.nombres, s.apellidos, s.telefono, s.correo, s.cargo, sis.nombreSistema, s.nombreUsuarioCopia, s.documentoUsuCopia, u.nombre, s.estado 
-                        FROM 
-                        solicitudes s 
-                        INNER JOIN usuarios u ON s.QuienSolicita = u.id
-                        INNER JOIN sistemas_de_informacion sis ON s.id_sistema = sis.id");
+$ver = $con->prepare("SELECT
+                        s.id_solicitud,
+                        s.tipoDocumento,
+                        s.documento,
+                        s.nombres,
+                        s.apellidos,
+                        s.telefono,
+                        s.correo,
+                        s.cargo,
+                        sis.nombreSistema,
+                        s.nombreUsuarioCopia,
+                        s.documentoUsuCopia,
+                        u.nombre,
+                        s.estado
+                    FROM
+                        solicitudes s
+                    INNER JOIN usuarios u ON
+                        s.QuienSolicita = u.id
+                    INNER JOIN sistemas_de_informacion sis ON
+                        s.id_sistema = sis.id
+                    ORDER BY
+                        s.id_solicitud
+                    DESC");
 $ver->execute();
 $resultado = $ver->fetchAll();
 
@@ -144,7 +161,8 @@ $resultado = $ver->fetchAll();
         $('#datatable1').DataTable({
             language: {
                 url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            }
+            },
+            order: [[0, 'desc']] 
         });
     </script>
 </body>

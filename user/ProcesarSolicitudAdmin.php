@@ -1,19 +1,19 @@
 <?php
 require "../conexion/conexion.php";
-$data = json_decode(file_get_contents("php://input"), true);
-if ($data) {
-    $tipoDocumento = $data["tipoDocumento"];
-    $nDocumento = $data["nDocumento"];
-    $nombres = $data["nombres"];
-    $apellidos = $data["apellidos"];
-    $telefono = $data["telefono"];
-    $correo = $data["correo"];
-    $cargo = $data["cargo"];
-    $sistemas = $data["sistemas"];
-    $nombreUsuCopia = $data["nombreUsuCopia"];
-    $documentoUsuCopia = $data["documentoUsuCopia"];
-    $solicitante = $data["solicitante"];
-    $estado = $data["estado"];
+
+if (isset($_POST["enviar"])) {
+    $tipoDocumento = $_POST["tipoDocumento"];
+    $nDocumento = $_POST["nDocumento"];
+    $nombres = $_POST["nombres"];
+    $apellidos = $_POST["apellidos"];
+    $telefono = $_POST["telefono"];
+    $correo = $_POST["correo"];
+    $cargo = $_POST["cargo"];
+    $sistemas = $_POST["sistemas"];
+    $nombreUsuCopia = $_POST["nombreUsuCopia"];
+    $documentoUsuCopia = $_POST["documentoUsuCopia"];
+    $solicitante = $_POST["solicitante"];
+    $estado = $_POST["estado"];
 
     if (
         !empty($tipoDocumento) && !empty($nDocumento) && !empty($nombres) &&
@@ -69,20 +69,11 @@ if ($data) {
         }
 
         if ($resultado) {
-            $response = [
-                'message' => "Solicitud Realizada Con Exito"
-            ];
+            header("location: vistaAdmin.php");
         } else {
-            $response = [
-                'message' => "Algo Salio Mal"
-            ];
+            echo "no insertado";
         }
     } else {
-        $response = [
-            'message' => "Algo Salio Mal"
-        ];
+        echo "Datos vacios";
     }
-    header('Content-Type: application/json');
-    echo json_encode($response);
 }
-
