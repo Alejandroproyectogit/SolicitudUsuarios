@@ -47,7 +47,7 @@ if ($_SESSION['id_rol'] == 2){
                         <div class="row">
                             <div class="col">
                                 <div class="page-description">
-                                    <h1>Crear Solicitud</h1>
+                                    <h1>Crear Usuario para el software</h1>
                                 </div>
                             </div>
                         </div>
@@ -57,7 +57,7 @@ if ($_SESSION['id_rol'] == 2){
                                     <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
                                         <div class="card">
                                             <div class="card-body">
-                                                <form action="ProcesarSolicitudAdmin.php" method="POST">
+                                                <form id="">
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <label for="settingsState" class="form-label">Tipo de Documento</label>

@@ -15,7 +15,7 @@ if ($_SESSION['id_rol'] == 2) {
 
 require "../conexion/conexion.php";
 $filtroSeleccionado = isset($_POST['filtro']) ? $_POST['filtro'] : 'Pendientes';
-$mesActual = date("m");
+$mesActual = date("Y/m/01");
 
 $sql = "SELECT
             s.id_solicitud,
@@ -41,7 +41,7 @@ $sql = "SELECT
         ";
 
 if ($filtroSeleccionado === 'Pendientes') {
-    $sql .= " WHERE s.estado = 'PENDIENTE' AND fechaSolicitud = '$mesActual' ORDER BY s.id_solicitud DESC";
+    $sql .= " WHERE s.estado = 'PENDIENTE' ORDER BY s.id_solicitud DESC";
 } elseif ($filtroSeleccionado === 'Realizados') {
     $sql .= " WHERE s.estado = 'CREADO' ORDER BY s.id_solicitud DESC";
 }
@@ -88,15 +88,33 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
                             <div class="col">
                                 <h1>Solicitudes</h1>
                                 <span>Usuarios Pendientes Por Crear</span>
-                                <select id="asignarFiltro" name="asignarFiltro" class="form-select" aria-label="Default select example">
-                                    <option value="Pendientes" <?php echo ($filtroSeleccionado == 'Pendientes') ? 'selected' : ''; ?>>Pendientes</option>
-                                    <option value="Realizados" <?php echo ($filtroSeleccionado == 'Realizados') ? 'selected' : ''; ?>>Realizados</option>
-                                    <option value="Todos" <?php echo ($filtroSeleccionado == 'Todos') ? 'selected' : ''; ?>>Todos</option>
-                                </select>
                             </div>
                         </div>
                     </div>
                     <div class="divider"></div>
+                    <div class="d-flex justify-content-between">
+                        <div class="filtroEstado">
+                            <label for="exampleFormControlInput1">Filtrar por estado:</label>
+                            <select id="asignarFiltro" name="asignarFiltro" class="form-select" aria-label="Default select example">
+                                <option value="Pendientes" <?php echo ($filtroSeleccionado == 'Pendientes') ? 'selected' : ''; ?>>Pendientes</option>
+                                <option value="Realizados" <?php echo ($filtroSeleccionado == 'Realizados') ? 'selected' : ''; ?>>Realizados</option>
+                                <option value="Todos" <?php echo ($filtroSeleccionado == 'Todos') ? 'selected' : ''; ?>>Todos</option>
+                            </select>
+                        </div>
+                        <div class="fechaInicio">
+                            <label for="exampleFormControlInput1">Fecha Inicio:</label>
+                            <input type="date" id="fechaInicio" class="form-control flatpickr1">
+                        </div>
+                    
+                        <div class="fechaFin">
+                            <label for="exampleFormControlInput1">Fecha Final:</label>
+                            <input type="date" id="fechaFin" class="form-control flatpickr1">
+                        </div>
+                            
+                        
+                    </div>
+                    <div class="divider"></div>
+
                     <div class="row">
                         <div class="col">
                             <div class="card">
@@ -122,7 +140,7 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
                                                         <td>Acción</td>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                <tbody id="agregar-registros">
                                                     <?php if (!empty($resultado)): ?>
                                                         <?php foreach ($resultado as $fila): ?>
                                                             <tr>
@@ -143,7 +161,7 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
                                                                     <?php if ($fila["estado"] === "PENDIENTE"): ?>
                                                                         <form class="cambioEstado">
                                                                             <input name="cambio" value="<?php echo $fila['id_solicitud']; ?>" hidden>
-                                                                            <button type="submit" class="btn btn-success align-middle"><i class="bi bi-check"></i></button>
+                                                                            <button type="submit" class="btn btn-success align-middle"><span class="bi bi-check"></span></button>
                                                                         </form>
                                                                     <?php endif; ?>
 
@@ -172,7 +190,26 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <!-- Javascripts -->
+    <script src="../assets/plugins/jquery/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../assets/js/filtroFechaAdmin.js"></script>
+    <script src="../assets/plugins/bootstrap/js/popper.min.js"></script>
+    <script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../assets/plugins/perfectscroll/perfect-scrollbar.min.js"></script>
+    <script src="../assets/plugins/pace/pace.min.js"></script>
+    <script src="../assets/plugins/highlight/highlight.pack.js"></script>
+    <script src="../assets/plugins/datatables/datatables.min.js"></script>
+    <script src="../assets/js/main.min.js"></script>
+    <script src="../assets/js/custom.js"></script>
+    <script src="../assets/js/pages/datatables.js"></script>
+    <script>
+        $('#datatable1').DataTable({
+        language: {
+            url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        order: [[0, 'desc']] 
+    });
+    </script>
     <script type="text/javascript">
 
         document.getElementById('asignarFiltro').addEventListener('change', function() {
@@ -221,24 +258,7 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
             });
         });
     </script>
-    <script src="../assets/plugins/jquery/jquery-3.5.1.min.js"></script>
-    <script src="../assets/plugins/bootstrap/js/popper.min.js"></script>
-    <script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../assets/plugins/perfectscroll/perfect-scrollbar.min.js"></script>
-    <script src="../assets/plugins/pace/pace.min.js"></script>
-    <script src="../assets/plugins/highlight/highlight.pack.js"></script>
-    <script src="../assets/plugins/datatables/datatables.min.js"></script>
-    <script src="../assets/js/main.min.js"></script>
-    <script src="../assets/js/custom.js"></script>
-    <script src="../assets/js/pages/datatables.js"></script>
-    <script>
-        $('#datatable1').DataTable({
-        language: {
-            url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        order: [[0, 'desc']] 
-    });
-    </script>
+    
 
 
 

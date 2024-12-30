@@ -12,3 +12,14 @@
     border-radius: 20px;
     border: 3px solid #eaf1f2;
 }
+
+.filtroEstado,.fechaInicio, .fechaFin{
+    width: 20%;
+}
+
+.rangoFechas{
+    width: 70%;
+    gap: 3%;
+
+}
+

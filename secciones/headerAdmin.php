@@ -5,9 +5,11 @@
             </div>
             <div class="d-flex">
                 <ul class="navbar-nav">
-                    
                     <li class="nav-item hidden-on-mobile">
-                        <a class="nav-link" href="../user/formularioSolicitudAdmin.php"><i class="material-icons-two-tone">person_add</i>Solicitar Usuarios</a>
+                        <a class="nav-link" href="../user/crearUsuarioAdmin.php"><i class="material-icons-two-tone">person_add</i>Crear Usuario</a>
+                    </li>
+                    <li class="nav-item hidden-on-mobile">
+                        <a class="nav-link" href="../user/formularioSolicitudAdmin.php"><i class="material-icons-two-tone">badge</i>Solicitar Usuarios</a>
                     </li>
                     <li class="nav-item hidden-on-mobile">
                         <a class="nav-link" href="../user/vistaAdmin.php"><i class="material-icons-two-tone">wysiwyg</i>Ver Solicitudes</a>
