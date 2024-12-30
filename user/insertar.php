@@ -1,31 +1,49 @@
 <?php
 require "../conexion/conexion.php";
-$id = 2;
-$nombre = "Camilo";
-$usuario = 5544;
-$contrasena = 5544;
-$cargo = "Jefe";
-$area = "IMG";
-$id_rol = 2;
 
+$data = json_decode(file_get_contents("php://input"), true);
 
-// Crear el hash de la contraseña con bcrypt
-$hash_contrasena = password_hash($contrasena, PASSWORD_BCRYPT);
+if ($data){
+    $tipoDocumento = htmlspecialchars($data["tipoDocumento"]);
+    $nDocumento = htmlspecialchars($data["nDocumento"]);
+    $nombres = htmlspecialchars($data["nombres"]);
+    $apellidos = htmlspecialchars($data["apellidos"]);
+    $usuario = htmlspecialchars($data["usuario"]);
+    $contrasena = htmlspecialchars($data["contrasena"]);
+    $cargo = htmlspecialchars($data["cargo"]);
+    $area = htmlspecialchars($data["area"]);
+    $id_rol = htmlspecialchars($data["rol"]);
 
-// Preparar la consulta SQL
-$stmt = $con->prepare("INSERT INTO usuarios (id,nombre,usuario,contrasena,cargo,area,id_rol) VALUES (:id,:nombre,:usuario,:contrasena,:cargo,:area,:id_rol)");
+    $hash_contrasena = password_hash($contrasena, PASSWORD_BCRYPT);
 
-// Vincular parámetros
-$stmt->bindParam(":id", $id, PDO::PARAM_INT);
-$stmt->bindParam(":nombre", $nombre, PDO::PARAM_STR);
-$stmt->bindParam(":usuario", $usuario, PDO::PARAM_INT);
-$stmt->bindParam(":contrasena", $hash_contrasena, PDO::PARAM_STR);
-$stmt->bindParam(":cargo", $cargo, PDO::PARAM_STR);
-$stmt->bindParam(":area", $area, PDO::PARAM_STR);
-$stmt->bindParam(":id_rol", $id_rol, PDO::PARAM_INT); // Asegúrate de tener el valor de $id_rol
+    $stmt = $con->prepare("INSERT INTO usuarios (tipoDocumento,documento,nombres,apellidos,usuario,contrasena,cargo,area,id_rol) VALUES (:tipoDoc,:nDoc,:nombres,:apellidos,:usuario,:contra,:cargo,:are,:id_rol)");
 
-// Ejecutar la consulta
-$stmt->execute();
+    // Vincular parámetros
+    $stmt->bindParam(":tipoDoc", $tipoDocumento, PDO::PARAM_STR);
+    $stmt->bindParam(":nDoc", $nDocumento, PDO::PARAM_INT);
+    $stmt->bindParam(":nombres", $nombres, PDO::PARAM_STR);
+    $stmt->bindParam(":apellidos", $apellidos, PDO::PARAM_STR);
+    $stmt->bindParam(":usuario", $usuario, PDO::PARAM_STR);
+    $stmt->bindParam(":contra", $hash_contrasena);
+    $stmt->bindParam(":cargo", $cargo, PDO::PARAM_STR);
+    $stmt->bindParam(":are", $area, PDO::PARAM_STR);
+    $stmt->bindParam(":id_rol", $id_rol, PDO::PARAM_INT);
+    $result = $stmt->execute();
 
-echo "Usuario creado correctamente!";
+    if ($result){
+        $response = [
+            'message' => "Usuario Creado"
+        ];
+    }else{
+        $response = [
+            'message' => "Error Algo Salio Mal"
+        ];
+    }
+}else{
+    $response = [
+        'message' => "Todos Los Campos Deben Estar LLenos"
+    ];
+}
+header('Content-Type: application/json');
+echo json_encode($response);
 ?>

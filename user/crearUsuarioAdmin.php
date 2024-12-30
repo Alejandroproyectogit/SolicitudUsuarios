@@ -57,7 +57,7 @@ if ($_SESSION['id_rol'] == 2){
                                     <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
                                         <div class="card">
                                             <div class="card-body">
-                                                <form id="">
+                                                <form id="UsuarioNuevo">
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <label for="settingsState" class="form-label">Tipo de Documento</label>
@@ -85,12 +85,12 @@ if ($_SESSION['id_rol'] == 2){
                                                     </div>
                                                     <div class="row m-t-lg">
                                                         <div class="col-md-6">
-                                                            <label for="settingsPhoneNumber" class="form-label">Telefono</label>
-                                                            <input type="text" class="form-control" id="settingsPhoneNumber" name="telefono" placeholder="(xxx) xxx-xxxx" required>
+                                                            <label for="settingsInputFirstName" class="form-label">Usuario</label>
+                                                            <input type="text" class="form-control" id="settingsInputFirstName" name="usuario" required>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <label for="settingsInputEmail" class="form-label">Correo</label>
-                                                            <input type="email" class="form-control" id="settingsInputEmail" name="correo" aria-describedby="settingsEmailHelp" placeholder="example@email.com">
+                                                            <label for="settingsInputFirstName" class="form-label">Contraseña</label>
+                                                            <input type="password" class="form-control" id="settingsInputFirstName" name="contrasena" required>
                                                         </div>
                                                     </div>
                                                     <div class="row m-t-lg">
@@ -99,32 +99,24 @@ if ($_SESSION['id_rol'] == 2){
                                                             <input type="text" class="form-control" id="settingsPhoneNumber" name="cargo" required>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <label for="settingsInputEmail" class="form-label">Seleccione</label><br>
-                                                            <div class="btn-group dropend">
-                                                                <button type="button" class="btn btn-info dropdown-toggle form-control" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                    Sistemas requeridos
-                                                                </button>
-                                                                <?php require "elegirSistema.php"; ?>
-                                                            </div>
+                                                            <label for="settingsInputFirstName" class="form-label">Area</label>
+                                                            <input type="text" class="form-control" id="settingsInputFirstName" name="area" required>
                                                         </div>
 
                                                     </div>
                                                     <div class="row m-t-lg">
                                                         <div class="col-md-6">
-                                                            <label for="settingsInputFirstName" class="form-label">Nombre del Usuario a Copiar</label>
-                                                            <input type="text" class="form-control" id="settingsInputFirstName" name="nombreUsuCopia" required>
+                                                            <label for="settingsState" class="form-label">Rol del Usuario</label>
+                                                            <select class="js-states form-control" id="settingsState" name="rol" tabindex="-1" style="width: 100%">
+                                                                <option value="1">Administrador</option>
+                                                                <option value="2">Usuario</option>
+                                                            </select>
                                                         </div>
-                                                        <div class="col-md-6">
-                                                            <label for="settingsPhoneNumber" class="form-label">Documento del Usuario a Copiar</label>
-                                                            <input type="text" class="form-control" id="settingsPhoneNumber" name="documentoUsuCopia" placeholder="xxxxxxxxxx" required>
-                                                        </div>
-                                                    </div>
-                                                    <input type="text" name="solicitante" value="<?php echo $_SESSION["id_usuario"];?>" hidden>
-                                                    <input type="text" name="estado" value="PENDIENTE" hidden>
+                                                        
                                                     <div class="row m-t-lg">
                                                         <div class="col">
 
-                                                            <button type="submit" name="enviar" class="btn btn-primary m-t-sm">Solicitar</button>
+                                                            <button type="submit" name="enviar" class="btn btn-primary m-t-sm">Crear</button>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -142,6 +134,7 @@ if ($_SESSION['id_rol'] == 2){
 
     <!-- Javascripts -->
     <script src="../assets/plugins/jquery/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../assets/plugins/bootstrap/js/popper.min.js"></script>
     <script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="../assets/plugins/perfectscroll/perfect-scrollbar.min.js"></script>
@@ -149,6 +142,35 @@ if ($_SESSION['id_rol'] == 2){
     <script src="../assets/plugins/highlight/highlight.pack.js"></script>
     <script src="../assets/js/main.min.js"></script>
     <script src="../assets/js/custom.js"></script>
+    <script type="text/javascript">
+        const formulario = document.getElementById("UsuarioNuevo");
+
+        formulario.addEventListener("submit", function (evento){
+            evento.preventDefault();
+
+            const datosFormulario = new FormData(evento.target);
+            const datosEnviados = Object.fromEntries(datosFormulario.entries());
+
+            fetch("insertar.php",{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(datosEnviados),
+            })
+            .then((response) => response.json())
+            .then((resultado) => {
+                Swal.fire({
+                    title: "EXITO",
+                    text: resultado.message,
+                    icon: "success"
+                }).then(() => {
+                    windows.location.href = "vistaAdmin.php";
+                });
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+    </script>
     
 </body>
 

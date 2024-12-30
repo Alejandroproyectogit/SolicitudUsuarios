@@ -25,7 +25,7 @@ $buscaRango = $con->prepare("SELECT
             s.nombreUsuarioCopia,
             s.documentoUsuCopia,
             s.fechaSolicitud,
-            u.nombre,
+            u.nombres,
             s.estado
         FROM
             solicitudes s
@@ -50,7 +50,7 @@ if ($result) {
             <td>".$fila['nombreSistema']."</td>
             <td>".$fila['nombreUsuarioCopia']."</td>
             <td>".$fila['documentoUsuCopia']."</td>
-            <td>".$fila['nombre']."</td>
+            <td>".$fila['nombres']."</td>
             <td>".$fila['estado']."</td>
             <td>".$fila['fechaSolicitud']."</td>
             </tr> 
