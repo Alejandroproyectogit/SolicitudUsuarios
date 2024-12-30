@@ -9,31 +9,40 @@ if (!isset($_SESSION['id_usuario'])) {
 
 
 require "../conexion/conexion.php";
-$ver = $con->prepare("SELECT
-                        s.id_solicitud,
-                        s.tipoDocumento,
-                        s.documento,
-                        s.nombres,
-                        s.apellidos,
-                        s.telefono,
-                        s.correo,
-                        s.cargo,
-                        sis.nombreSistema,
-                        s.nombreUsuarioCopia,
-                        s.documentoUsuCopia,
-                        u.nombre,
-                        s.estado
-                    FROM
-                        solicitudes s
-                    INNER JOIN usuarios u ON
-                        s.QuienSolicita = u.id
-                    INNER JOIN sistemas_de_informacion sis ON
-                        s.id_sistema = sis.id
-                    ORDER BY
-                        s.id_solicitud
-                    DESC");
+$filtroSeleccionado = isset($_POST['filtro']) ? $_POST['filtro'] : 'Pendientes';
+
+$sql = " SELECT
+            s.id_solicitud,
+            s.tipoDocumento,
+            s.documento,
+            s.nombres,
+            s.apellidos,
+            s.telefono,
+            s.correo,
+            s.cargo,
+            sis.nombreSistema,
+            s.nombreUsuarioCopia,
+            s.documentoUsuCopia,
+            s.QuienSolicita,
+            u.nombre,
+            s.estado
+        FROM
+            solicitudes s
+        INNER JOIN usuarios u ON
+            s.QuienSolicita = u.id
+        INNER JOIN sistemas_de_informacion sis ON
+            s.id_sistema = sis.id
+        ";
+
+if ($filtroSeleccionado === 'Pendientes') {
+    $sql .= " WHERE s.estado = 'PENDIENTE' ORDER BY s.id_solicitud DESC";
+} elseif ($filtroSeleccionado === 'Realizados') {
+    $sql .= " WHERE s.estado = 'CREADO' ORDER BY s.id_solicitud DESC";
+}
+
+$ver = $con->prepare($sql);
 $ver->execute();
-$resultado = $ver->fetchAll();
+$resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
 
 
 
@@ -76,10 +85,10 @@ $resultado = $ver->fetchAll();
                                 <div class="page-description">
                                     <h1>Solicitudes</h1>
                                     <span>Usuarios Pendientes Por Crear</span>
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option selected>Pendientes</option>
-                                        <option value="1">Realizados</option>
-                                        <option value="2">Todos</option>
+                                    <select id="asignarFiltro" name="asignarFiltro" class="form-select" aria-label="Default select example">
+                                        <option value="Pendientes" <?php echo ($filtroSeleccionado == 'Pendientes') ? 'selected' : ''; ?>>Pendientes</option>
+                                        <option value="Realizados" <?php echo ($filtroSeleccionado == 'Realizados') ? 'selected' : ''; ?>>Realizados</option>
+                                        <option value="Todos" <?php echo ($filtroSeleccionado == 'Todos') ? 'selected' : ''; ?>>Todos</option>
                                     </select>
                                 </div>
                                 
@@ -93,7 +102,6 @@ $resultado = $ver->fetchAll();
                                             <table id="datatable1" class="table" class="display" style="width:100%">
                                                 <thead>
                                                     <tr>
-                                                        <td>#</td>
                                                         <td>Tipo de Documento</td>
                                                         <td>Documento</td>
                                                         <td>Nombre</td>
@@ -111,9 +119,8 @@ $resultado = $ver->fetchAll();
                                                 <tbody>
                                                     <?php if (!empty($resultado)): ?>
                                                         <?php foreach ($resultado as $fila): ?>
-                                                            <?php if ($fila["estado"] === "PENDIENTE"): ?>
+                                                            <?php if ($fila["QuienSolicita"] === $_SESSION['id_usuario']): ?>
                                                                 <tr>
-                                                                    <td><?php echo $fila["id_solicitud"]; ?></td>
                                                                     <td><?php echo $fila["tipoDocumento"]; ?></td>
                                                                     <td><?php echo $fila["documento"]; ?></td>
                                                                     <td><?php echo $fila["nombres"]; ?></td>
@@ -147,6 +154,23 @@ $resultado = $ver->fetchAll();
     </div>
 
     <!-- Javascripts -->
+    <script type="text/javascript">
+
+        document.getElementById('asignarFiltro').addEventListener('change', function() {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = window.location.href;
+
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'filtro';
+                input.value = this.value;
+
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            });
+    </script>  
     <script src="../assets/plugins/jquery/jquery-3.5.1.min.js"></script>
     <script src="../assets/plugins/bootstrap/js/popper.min.js"></script>
     <script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>

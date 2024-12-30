@@ -29,10 +29,10 @@ if (!empty($usuario) && !empty($pass)) {
                 exit();
             }
         } else {
-            header("location: ../app/login.php?error=1");
+            header("location: ../solicitudUsuarios/login.php?error=1");
         }
     } else {
-        header("location: ../app/login.php?error=1");
+        header("location: ../solicitudUsuarios/login.php?error=1");
     }
 
 }else{

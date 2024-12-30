@@ -1,10 +1,9 @@
 <?php
-// Datos de conexión a la base de datos (asegúrate de tener $con ya inicializado)
 require "../conexion/conexion.php";
-$id = 3;
-$nombre = "Kevin";
-$usuario = 123321;
-$contrasena = 123;
+$id = 2;
+$nombre = "Camilo";
+$usuario = 5544;
+$contrasena = 5544;
 $cargo = "Jefe";
 $area = "IMG";
 $id_rol = 2;
