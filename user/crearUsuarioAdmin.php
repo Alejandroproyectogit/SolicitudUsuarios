@@ -6,7 +6,7 @@ if (!isset($_SESSION['id_usuario'])) {
     header('Location: ../index.php');
     exit();
 }
-if ($_SESSION['id_rol'] == 2){
+if ($_SESSION['id_rol'] == 2) {
     header('Location: vistaUsuarios.php');
     exit();
 }
@@ -17,7 +17,7 @@ if ($_SESSION['id_rol'] == 2){
 <html lang="en">
 
 <head>
-    <?php require "../secciones/head.php";?>
+    <?php require "../secciones/head.php"; ?>
 </head>
 
 <body>
@@ -28,7 +28,7 @@ if ($_SESSION['id_rol'] == 2){
                 <div class="sidebar-user-switcher user-activity-online">
                     <a href="#">
                         <span class="activity-indicator"></span>
-                        <span class="user-info-text">Bienvenid@ <?php echo $_SESSION['nombre'];?>  <br><span class="user-state-info">Administrador</span><span class="activity-indicator"></span></span>
+                        <span class="user-info-text">Bienvenid@ <?php echo $_SESSION['nombre']; ?> <br><span class="user-state-info">Administrador</span><span class="activity-indicator"></span></span>
                     </a>
                 </div>
             </div>
@@ -40,7 +40,7 @@ if ($_SESSION['id_rol'] == 2){
                 </form>
                 <a href="#" class="toggle-search"><i class="material-icons">close</i></a>
             </div>
-            <?php require "../secciones/headerAdmin.php";?>
+            <?php require "../secciones/headerAdmin.php"; ?>
             <div class="app-content">
                 <div class="content-wrapper">
                     <div class="container-fluid">
@@ -61,7 +61,7 @@ if ($_SESSION['id_rol'] == 2){
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <label for="settingsState" class="form-label">Tipo de Documento</label>
-                                                            <select class="js-states form-control" id="settingsState" name="tipoDocumento" tabindex="-1" style="width: 100%">
+                                                            <select class="js-states form-control" id="tipoDocumento" name="tipoDocumento" tabindex="-1" style="width: 100%">
                                                                 <option value="CC">CC</option>
                                                                 <option value="TI">TI</option>
                                                                 <option value="CE">CE</option>
@@ -70,55 +70,56 @@ if ($_SESSION['id_rol'] == 2){
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="settingsPhoneNumber" class="form-label">Documento</label>
-                                                            <input type="text" class="form-control" id="settingsPhoneNumber" name="nDocumento" placeholder="xxxxxxxxxx" required>
+                                                            <input type="text" class="form-control" id="nDocumento" name="nDocumento" placeholder="xxxxxxxxxx" required>
+                                                            <div id="aviso" class="text-danger"></div>
                                                         </div>
                                                     </div>
                                                     <div class="row m-t-lg">
                                                         <div class="col-md-6">
                                                             <label for="settingsInputFirstName" class="form-label">Nombres</label>
-                                                            <input type="text" class="form-control" id="settingsInputFirstName" name="nombres" required>
+                                                            <input type="text" class="form-control" id="nombres" name="nombres" required>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="settingsInputLastName" class="form-label">Apellidos</label>
-                                                            <input type="text" class="form-control" id="settingsInputLastName" name="apellidos" required>
+                                                            <input type="text" class="form-control" id="apellidos" name="apellidos" required>
                                                         </div>
                                                     </div>
                                                     <div class="row m-t-lg">
                                                         <div class="col-md-6">
                                                             <label for="settingsInputFirstName" class="form-label">Usuario</label>
-                                                            <input type="text" class="form-control" id="settingsInputFirstName" name="usuario" required>
+                                                            <input type="text" class="form-control" id="usuario" name="usuario" required>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="settingsInputFirstName" class="form-label">Contraseña</label>
-                                                            <input type="password" class="form-control" id="settingsInputFirstName" name="contrasena" required>
+                                                            <input type="password" class="form-control" id="contrasena" name="contrasena" required>
                                                         </div>
                                                     </div>
                                                     <div class="row m-t-lg">
                                                         <div class="col-md-6">
                                                             <label for="settingsPhoneNumber" class="form-label">Cargo</label>
-                                                            <input type="text" class="form-control" id="settingsPhoneNumber" name="cargo" required>
+                                                            <input type="text" class="form-control" id="cargo" name="cargo" required>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="settingsInputFirstName" class="form-label">Area</label>
-                                                            <input type="text" class="form-control" id="settingsInputFirstName" name="area" required>
+                                                            <input type="text" class="form-control" id="area" name="area" required>
                                                         </div>
 
                                                     </div>
                                                     <div class="row m-t-lg">
                                                         <div class="col-md-6">
                                                             <label for="settingsState" class="form-label">Rol del Usuario</label>
-                                                            <select class="js-states form-control" id="settingsState" name="rol" tabindex="-1" style="width: 100%">
+                                                            <select class="js-states form-control" id="rol" name="rol" tabindex="-1" style="width: 100%">
                                                                 <option value="1">Administrador</option>
                                                                 <option value="2">Usuario</option>
                                                             </select>
                                                         </div>
-                                                        
-                                                    <div class="row m-t-lg">
-                                                        <div class="col">
 
-                                                            <button type="submit" name="enviar" class="btn btn-primary m-t-sm">Crear</button>
+                                                        <div class="row m-t-lg">
+                                                            <div class="col">
+
+                                                                <button type="submit" name="enviar" class="btn btn-primary m-t-sm">Crear</button>
+                                                            </div>
                                                         </div>
-                                                    </div>
                                                 </form>
                                             </div>
                                         </div>
@@ -145,33 +146,60 @@ if ($_SESSION['id_rol'] == 2){
     <script type="text/javascript">
         const formulario = document.getElementById("UsuarioNuevo");
 
-        formulario.addEventListener("submit", function (evento){
+        formulario.addEventListener("submit", function(evento) {
             evento.preventDefault();
 
             const datosFormulario = new FormData(evento.target);
             const datosEnviados = Object.fromEntries(datosFormulario.entries());
 
-            fetch("insertar.php",{
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(datosEnviados),
-            })
-            .then((response) => response.json())
-            .then((resultado) => {
-                Swal.fire({
-                    title: "EXITO",
-                    text: resultado.message,
-                    icon: "success"
-                }).then(() => {
-                    windows.location.href = "vistaAdmin.php";
+            fetch("insertar.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(datosEnviados),
+                })
+                .then((response) => response.json())
+                .then((resultado) => {
+                    if (resultado.message == 1) {
+                        Swal.fire({
+                            title: "EXITO",
+                            text: "Usuario Creado",
+                            icon: "success"
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }else if (resultado.message == 3){
+                        Swal.fire({
+                            title: "ERROR",
+                            text: "Campos Vacios",
+                            icon: "error"
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }else if (resultado.message == 2){
+                        /*Swal.fire({
+                            title: "ERROR",
+                            text: "Usuario Ya Existe",
+                            icon: "error"
+                        });*/
+                        const idAviso = document.getElementById("aviso");
+                        idAviso.innerText = "Ya Existe El Usuario Con Esta Cedula";
+                        
+                    }
+                })
+                .catch((error) => {
+                    // En caso de error en la solicitud o el proceso
+                    Swal.fire({
+                        title: "Error",
+                        text: "Ocurrió un error en el servidor o la conexión.",
+                        icon: "error"
+                    });
+                    console.error("Error en la solicitud:", error); // Log de error en consola para depuración
                 });
-            })
-            .catch((error) => console.error("Error:", error));
-        });
+                    });
     </script>
-    
+
 </body>
 
 </html>
