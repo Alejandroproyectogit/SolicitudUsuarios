@@ -30,7 +30,7 @@ $sql = "SELECT
             s.nombreUsuarioCopia,
             s.documentoUsuCopia,
             s.fechaSolicitud,
-            u.nombres,
+            u.nombre,
             s.estado
         FROM
             solicitudes s
@@ -150,7 +150,7 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
                                                                 <td><?php echo $fila["nombreSistema"]; ?></td>
                                                                 <td><?php echo $fila["nombreUsuarioCopia"]; ?></td>
                                                                 <td><?php echo $fila["documentoUsuCopia"]; ?></td>
-                                                                <td><?php echo $fila["nombres"]; ?></td>
+                                                                <td><?php echo $fila["nombre"]; ?></td>
                                                                 <td><?php echo $fila["estado"]; ?></td>
                                                                 <td><?php echo $fila["fechaSolicitud"] ?></td>
                                                                 <td>

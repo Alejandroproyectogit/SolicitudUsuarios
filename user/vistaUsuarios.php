@@ -6,7 +6,7 @@ if (!isset($_SESSION['id_usuario'])) {
     header('Location: ../index.php');
     exit();
 }
-
+$id = $_SESSION['id_usuario'];
 
 require "../conexion/conexion.php";
 $filtroSeleccionado = isset($_POST['filtro']) ? $_POST['filtro'] : 'Pendientes';
@@ -24,7 +24,7 @@ $sql = " SELECT
             s.nombreUsuarioCopia,
             s.documentoUsuCopia,
             s.QuienSolicita,
-            u.nombres,
+            u.nombre,
             s.estado
         FROM
             solicitudes s
@@ -35,14 +35,15 @@ $sql = " SELECT
         ";
 
 if ($filtroSeleccionado === 'Pendientes') {
-    $sql .= " WHERE s.estado = 'PENDIENTE' ORDER BY s.id_solicitud DESC";
+    $sql .= " WHERE s.estado = 'PENDIENTE' AND s.QuienSolicita = :quienSolicita ORDER BY s.id_solicitud DESC";
 } elseif ($filtroSeleccionado === 'Realizados') {
     $sql .= " WHERE s.estado = 'CREADO' ORDER BY s.id_solicitud DESC";
 }
 
 $ver = $con->prepare($sql);
+$ver->bindParam(":quienSolicita", $id, PDO::PARAM_INT);
 $ver->execute();
-$resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
+$resultados = $ver->fetchAll(PDO::FETCH_ASSOC);
 
 
 
@@ -117,9 +118,8 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php if (!empty($resultado)): ?>
-                                                        <?php foreach ($resultado as $fila): ?>
-                                                            <?php if ($fila["QuienSolicita"] === $_SESSION['id_usuario']): ?>
+                                                    <?php if (!empty($resultados)): ?>
+                                                        <?php foreach ($resultados as $fila): ?>
                                                                 <tr>
                                                                     <td><?php echo $fila["tipoDocumento"]; ?></td>
                                                                     <td><?php echo $fila["documento"]; ?></td>
@@ -131,11 +131,10 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
                                                                     <td><?php echo $fila["nombreSistema"]; ?></td>
                                                                     <td><?php echo $fila["nombreUsuarioCopia"]; ?></td>
                                                                     <td><?php echo $fila["documentoUsuCopia"]; ?></td>
-                                                                    <td><?php echo $fila["nombres"]; ?></td>
+                                                                    <td><?php echo $fila["nombre"]; ?></td>
                                                                     <td><?php echo $fila["estado"]; ?></td>
                                                                     
                                                                 </tr>
-                                                            <?php endif; ?>
                                                         <?php endforeach; ?>
                                                     <?php endif; ?>
                                                 </tbody>

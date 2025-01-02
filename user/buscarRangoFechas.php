@@ -31,7 +31,7 @@ $sql = "SELECT
             s.nombreUsuarioCopia,
             s.documentoUsuCopia,
             s.fechaSolicitud,
-            u.nombres,
+            u.nombre,
             s.estado
         FROM
             solicitudes s
@@ -64,7 +64,7 @@ if ($result) {
             <td>" . $fila['nombreSistema'] . "</td>
             <td>" . $fila['nombreUsuarioCopia'] . "</td>
             <td>" . $fila['documentoUsuCopia'] . "</td>
-            <td>" . $fila['nombres'] . "</td>
+            <td>" . $fila['nombre'] . "</td>
             <td>" . $fila['estado'] . "</td>
             <td>" . $fila['fechaSolicitud'] . "</td>
         ";
