@@ -14,8 +14,8 @@ if ($_SESSION['id_rol'] == 2) {
 
 
 require "../conexion/conexion.php";
-$filtroSeleccionado = isset($_POST['filtro']) ? $_POST['filtro'] : 'Pendientes';
-$mesActual = date("Y/m/01");
+$mes_actual = date('m');  // 'm' devuelve el mes actual en formato 2 dígitos
+$anio_actual = date('Y'); // 'Y' devuelve el año actual en formato 4 dígitos
 
 $sql = "SELECT
             s.id_solicitud,
@@ -38,13 +38,10 @@ $sql = "SELECT
             s.QuienSolicita = u.id
         INNER JOIN sistemas_de_informacion sis ON
             s.id_sistema = sis.id
+        WHERE s.estado = 'PENDIENTE' AND MONTH(fechaSolicitud) = $mes_actual AND YEAR(fechaSolicitud) = $anio_actual ORDER BY s.id_solicitud DESC
         ";
 
-if ($filtroSeleccionado === 'Pendientes') {
-    $sql .= " WHERE s.estado = 'PENDIENTE' ORDER BY s.id_solicitud DESC";
-} elseif ($filtroSeleccionado === 'Realizados') {
-    $sql .= " WHERE s.estado = 'CREADO' ORDER BY s.id_solicitud DESC";
-}
+
 
 $ver = $con->prepare($sql);
 $ver->execute();
@@ -96,9 +93,9 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
                         <div class="filtroEstado">
                             <label for="exampleFormControlInput1">Filtrar por estado:</label>
                             <select id="asignarFiltro" name="asignarFiltro" class="form-select" aria-label="Default select example">
-                                <option value="Pendientes" <?php echo ($filtroSeleccionado == 'Pendientes') ? 'selected' : ''; ?>>Pendientes</option>
-                                <option value="Realizados" <?php echo ($filtroSeleccionado == 'Realizados') ? 'selected' : ''; ?>>Realizados</option>
-                                <option value="Todos" <?php echo ($filtroSeleccionado == 'Todos') ? 'selected' : ''; ?>>Todos</option>
+                                <option value="PENDIENTE">Pendientes</option>
+                                <option value="CREADO">Realizados</option>
+                                <option value="TODO">Todos</option>
                             </select>
                         </div>
                         <div class="fechaInicio">
@@ -114,7 +111,6 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
                         
                     </div>
                     <div class="divider"></div>
-
                     <div class="row">
                         <div class="col">
                             <div class="card">
@@ -211,23 +207,6 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
     });
     </script>
     <script type="text/javascript">
-
-        document.getElementById('asignarFiltro').addEventListener('change', function() {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = window.location.href;
-
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'filtro';
-                input.value = this.value;
-
-                form.appendChild(input);
-                document.body.appendChild(form);
-                form.submit();
-            });                                                                
-
-
         const formularios = document.querySelectorAll(".cambioEstado");
 
         formularios.forEach((formulario) => {
