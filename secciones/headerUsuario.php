@@ -4,8 +4,7 @@
             <div class="navbar-nav" id="navbarNav">
             </div>
             <div class="d-flex">
-                <ul class="navbar-nav">
-                    
+                <ul class="navbar-nav disg">
                     <li class="nav-item hidden-on-mobile">
                         <a class="nav-link" href="../user/formularioSolicitudUsuarios.php"><i class="material-icons-two-tone">person_add</i>Solicitar Usuarios</a>
                     </li>
@@ -16,6 +15,19 @@
                         <a class="nav-link nav-notifications-toggle" href="destruirSesion.php"><i class="material-icons-two-tone">logout</i></a>
                     </li>
                 </ul>
+                <ul class="navbar-nav disp">
+                    <li class="nav-item hidden-on-mobile">
+                        <a class="nav-link dropdown-toggle ajuste" href="#" id="addDropdownLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="material-icons">menu</i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end language-dropdown" aria-labelledby="languageDropDown">
+                            <li><a class="nav-link text-center" href="../user/formularioSolicitudUsuarios.php"><i class="material-icons-two-tone">person_add</i><br>Solicitar Usuarios</a></li>
+                            <li><a class="nav-link text-center" href="../user/vistaUsuarios.php"><i class="material-icons-two-tone">wysiwyg</i><br>Ver Solicitudes</a></li>
+                            <li><a class="nav-link nav-notifications-toggle" href="destruirSesion.php"><i class="material-icons-two-tone">logout</i></a></li>
+                        </ul>
+                    </li>
+                </ul>
+
             </div>
         </div>
     </nav>

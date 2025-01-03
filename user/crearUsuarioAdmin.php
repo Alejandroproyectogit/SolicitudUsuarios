@@ -51,83 +51,84 @@ if ($_SESSION['id_rol'] == 2) {
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <form id="UsuarioNuevo">
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <label for="settingsState" class="form-label">Tipo de Documento</label>
-                                                            <select class="js-states form-control" id="tipoDocumento" name="tipoDocumento" tabindex="-1" style="width: 100%">
-                                                                <option value="CC">CC</option>
-                                                                <option value="TI">TI</option>
-                                                                <option value="CE">CE</option>
-                                                                <option value="PP">PP</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label for="settingsPhoneNumber" class="form-label">Documento</label>
-                                                            <input type="text" class="form-control" id="nDocumento" name="nDocumento" placeholder="xxxxxxxxxx" required>
-                                                            <div id="aviso" class="text-danger"></div>
-                                                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <form id="UsuarioNuevo">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="settingsState" class="form-label">Tipo de Documento</label>
+                                                        <select class="js-states form-control" id="tipoDocumento" name="tipoDocumento" tabindex="-1" style="width: 100%">
+                                                            <option value="CC">CC</option>
+                                                            <option value="TI">TI</option>
+                                                            <option value="CE">CE</option>
+                                                            <option value="PP">PP</option>
+                                                        </select>
                                                     </div>
-                                                    <div class="row m-t-lg">
-                                                        <div class="col-md-6">
-                                                            <label for="settingsInputFirstName" class="form-label">Nombres</label>
-                                                            <input type="text" class="form-control" id="nombres" name="nombres" required>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label for="settingsInputLastName" class="form-label">Apellidos</label>
-                                                            <input type="text" class="form-control" id="apellidos" name="apellidos" required>
-                                                        </div>
+                                                    <div class="col-md-6">
+                                                        <label for="settingsPhoneNumber" class="form-label">Documento</label>
+                                                        <input type="text" class="form-control" id="nDocumento" name="nDocumento" placeholder="xxxxxxxxxx" required>
+                                                        <div id="aviso" class="text-danger"></div>
                                                     </div>
-                                                    <div class="row m-t-lg">
-                                                        <div class="col-md-6">
-                                                            <label for="settingsInputFirstName" class="form-label">Usuario</label>
-                                                            <input type="text" class="form-control" id="usuario" name="usuario" required>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label for="settingsInputFirstName" class="form-label">Contraseña</label>
-                                                            <input type="password" class="form-control" id="contrasena" name="contrasena" required>
-                                                        </div>
+                                                </div>
+                                                <div class="row m-t-lg">
+                                                    <div class="col-md-6">
+                                                        <label for="settingsInputFirstName" class="form-label">Nombres</label>
+                                                        <input type="text" class="form-control" id="nombres" name="nombres" required>
                                                     </div>
-                                                    <div class="row m-t-lg">
-                                                        <div class="col-md-6">
-                                                            <label for="settingsPhoneNumber" class="form-label">Cargo</label>
-                                                            <input type="text" class="form-control" id="cargo" name="cargo" required>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label for="settingsInputFirstName" class="form-label">Area</label>
-                                                            <input type="text" class="form-control" id="area" name="area" required>
-                                                        </div>
+                                                    <div class="col-md-6">
+                                                        <label for="settingsInputLastName" class="form-label">Apellidos</label>
+                                                        <input type="text" class="form-control" id="apellidos" name="apellidos" required>
+                                                    </div>
+                                                </div>
+                                                <div class="row m-t-lg">
+                                                    <div class="col-md-6">
+                                                        <label for="settingsInputFirstName" class="form-label">Usuario</label>
+                                                        <input type="text" class="form-control" id="usuario" name="usuario" required>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="settingsInputFirstName" class="form-label">Contraseña</label>
+                                                        <input type="password" class="form-control" id="contrasena" name="contrasena" required>
+                                                    </div>
+                                                </div>
+                                                <div class="row m-t-lg">
+                                                    <div class="col-md-6">
+                                                        <label for="settingsPhoneNumber" class="form-label">Cargo</label>
+                                                        <input type="text" class="form-control" id="cargo" name="cargo" required>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="settingsInputFirstName" class="form-label">Area</label>
+                                                        <input type="text" class="form-control" id="area" name="area" required>
+                                                    </div>
 
+                                                </div>
+                                                <div class="row m-t-lg">
+                                                    <div class="col-md-6">
+                                                        <label for="settingsState" class="form-label">Rol del Usuario</label>
+                                                        <select class="js-states form-control" id="rol" name="rol" tabindex="-1" style="width: 100%">
+                                                            <option value="1">Administrador</option>
+                                                            <option value="2">Usuario</option>
+                                                        </select>
                                                     </div>
+
                                                     <div class="row m-t-lg">
-                                                        <div class="col-md-6">
-                                                            <label for="settingsState" class="form-label">Rol del Usuario</label>
-                                                            <select class="js-states form-control" id="rol" name="rol" tabindex="-1" style="width: 100%">
-                                                                <option value="1">Administrador</option>
-                                                                <option value="2">Usuario</option>
-                                                            </select>
-                                                        </div>
+                                                        <div class="col">
 
-                                                        <div class="row m-t-lg">
-                                                            <div class="col">
-
-                                                                <button type="submit" name="enviar" class="btn btn-primary m-t-sm">Crear</button>
-                                                            </div>
+                                                            <button type="submit" name="enviar" class="btn btn-primary m-t-sm">Crear</button>
                                                         </div>
-                                                </form>
-                                            </div>
+                                                    </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -169,7 +170,7 @@ if ($_SESSION['id_rol'] == 2) {
                         }).then(() => {
                             location.reload();
                         });
-                    }else if (resultado.message == 3){
+                    } else if (resultado.message == 3) {
                         Swal.fire({
                             title: "ERROR",
                             text: "Campos Vacios",
@@ -177,7 +178,7 @@ if ($_SESSION['id_rol'] == 2) {
                         }).then(() => {
                             location.reload();
                         });
-                    }else if (resultado.message == 2){
+                    } else if (resultado.message == 2) {
                         /*Swal.fire({
                             title: "ERROR",
                             text: "Usuario Ya Existe",
@@ -185,7 +186,7 @@ if ($_SESSION['id_rol'] == 2) {
                         });*/
                         const idAviso = document.getElementById("aviso");
                         idAviso.innerText = "Ya Existe El Usuario Con Esta Cedula";
-                        
+
                     }
                 })
                 .catch((error) => {
@@ -197,7 +198,7 @@ if ($_SESSION['id_rol'] == 2) {
                     });
                     console.error("Error en la solicitud:", error); // Log de error en consola para depuración
                 });
-                    });
+        });
     </script>
 
 </body>

@@ -6,7 +6,7 @@ if (!isset($_SESSION['id_usuario'])) {
     header('Location: ../index.php');
     exit();
 }
-if ($_SESSION['id_rol'] == 2){
+if ($_SESSION['id_rol'] == 2) {
     header('Location: vistaUsuarios.php');
     exit();
 }
@@ -17,7 +17,7 @@ if ($_SESSION['id_rol'] == 2){
 <html lang="en">
 
 <head>
-    <?php require "../secciones/head.php";?>
+    <?php require "../secciones/head.php"; ?>
 </head>
 
 <body>
@@ -28,7 +28,7 @@ if ($_SESSION['id_rol'] == 2){
                 <div class="sidebar-user-switcher user-activity-online">
                     <a href="#">
                         <span class="activity-indicator"></span>
-                        <span class="user-info-text">Bienvenid@ <?php echo $_SESSION['nombre'];?>  <br><span class="user-state-info">Administrador</span><span class="activity-indicator"></span></span>
+                        <span class="user-info-text">Bienvenid@ <?php echo $_SESSION['nombre']; ?> <br><span class="user-state-info">Administrador</span><span class="activity-indicator"></span></span>
                     </a>
                 </div>
             </div>
@@ -40,7 +40,7 @@ if ($_SESSION['id_rol'] == 2){
                 </form>
                 <a href="#" class="toggle-search"><i class="material-icons">close</i></a>
             </div>
-            <?php require "../secciones/headerAdmin.php";?>
+            <?php require "../secciones/headerAdmin.php"; ?>
             <div class="app-content">
                 <div class="content-wrapper">
                     <div class="container-fluid">
@@ -51,90 +51,91 @@ if ($_SESSION['id_rol'] == 2){
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <form action="ProcesarSolicitudAdmin.php" method="POST">
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <label for="settingsState" class="form-label">Tipo de Documento</label>
-                                                            <select class="js-states form-control" id="settingsState" name="tipoDocumento" tabindex="-1" style="width: 100%">
-                                                                <option value="CC">CC</option>
-                                                                <option value="TI">TI</option>
-                                                                <option value="CE">CE</option>
-                                                                <option value="PP">PP</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label for="settingsPhoneNumber" class="form-label">Documento</label>
-                                                            <input type="text" class="form-control" id="settingsPhoneNumber" name="nDocumento" placeholder="xxxxxxxxxx" required>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <form action="ProcesarSolicitudAdmin.php" method="POST">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="settingsState" class="form-label">Tipo de Documento</label>
+                                                        <select class="js-states form-control" id="settingsState" name="tipoDocumento" tabindex="-1" style="width: 100%">
+                                                            <option value="CC">CC</option>
+                                                            <option value="TI">TI</option>
+                                                            <option value="CE">CE</option>
+                                                            <option value="PP">PP</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="settingsPhoneNumber" class="form-label">Documento</label>
+                                                        <input type="text" class="form-control" id="settingsPhoneNumber" name="nDocumento" placeholder="xxxxxxxxxx" required>
+                                                    </div>
+                                                </div>
+                                                <div class="row m-t-lg">
+                                                    <div class="col-md-6">
+                                                        <label for="settingsInputFirstName" class="form-label">Nombres</label>
+                                                        <input type="text" class="form-control" id="settingsInputFirstName" name="nombres" required>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="settingsInputLastName" class="form-label">Apellidos</label>
+                                                        <input type="text" class="form-control" id="settingsInputLastName" name="apellidos" required>
+                                                    </div>
+                                                </div>
+                                                <div class="row m-t-lg">
+                                                    <div class="col-md-6">
+                                                        <label for="settingsPhoneNumber" class="form-label">Telefono</label>
+                                                        <input type="text" class="form-control" id="settingsPhoneNumber" name="telefono" placeholder="(xxx) xxx-xxxx" required>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="settingsInputEmail" class="form-label">Correo</label>
+                                                        <input type="email" class="form-control" id="settingsInputEmail" name="correo" aria-describedby="settingsEmailHelp" placeholder="example@email.com">
+                                                    </div>
+                                                </div>
+                                                <div class="row m-t-lg">
+                                                    <div class="col-md-6">
+                                                        <label for="settingsPhoneNumber" class="form-label">Cargo</label>
+                                                        <input type="text" class="form-control" id="settingsPhoneNumber" name="cargo" required>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="settingsInputEmail" class="form-label">Seleccione</label><br>
+                                                        <div class="btn-group dropend">
+                                                            <button type="button" class="btn btn-info dropdown-toggle form-control" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                Sistemas requeridos
+                                                            </button>
+                                                            <?php require "elegirSistema.php"; ?>
                                                         </div>
                                                     </div>
-                                                    <div class="row m-t-lg">
-                                                        <div class="col-md-6">
-                                                            <label for="settingsInputFirstName" class="form-label">Nombres</label>
-                                                            <input type="text" class="form-control" id="settingsInputFirstName" name="nombres" required>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label for="settingsInputLastName" class="form-label">Apellidos</label>
-                                                            <input type="text" class="form-control" id="settingsInputLastName" name="apellidos" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row m-t-lg">
-                                                        <div class="col-md-6">
-                                                            <label for="settingsPhoneNumber" class="form-label">Telefono</label>
-                                                            <input type="text" class="form-control" id="settingsPhoneNumber" name="telefono" placeholder="(xxx) xxx-xxxx" required>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label for="settingsInputEmail" class="form-label">Correo</label>
-                                                            <input type="email" class="form-control" id="settingsInputEmail" name="correo" aria-describedby="settingsEmailHelp" placeholder="example@email.com">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row m-t-lg">
-                                                        <div class="col-md-6">
-                                                            <label for="settingsPhoneNumber" class="form-label">Cargo</label>
-                                                            <input type="text" class="form-control" id="settingsPhoneNumber" name="cargo" required>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label for="settingsInputEmail" class="form-label">Seleccione</label><br>
-                                                            <div class="btn-group dropend">
-                                                                <button type="button" class="btn btn-info dropdown-toggle form-control" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                    Sistemas requeridos
-                                                                </button>
-                                                                <?php require "elegirSistema.php"; ?>
-                                                            </div>
-                                                        </div>
 
+                                                </div>
+                                                <div class="row m-t-lg">
+                                                    <div class="col-md-6">
+                                                        <label for="settingsInputFirstName" class="form-label">Nombre del Usuario a Copiar</label>
+                                                        <input type="text" class="form-control" id="settingsInputFirstName" name="nombreUsuCopia" required>
                                                     </div>
-                                                    <div class="row m-t-lg">
-                                                        <div class="col-md-6">
-                                                            <label for="settingsInputFirstName" class="form-label">Nombre del Usuario a Copiar</label>
-                                                            <input type="text" class="form-control" id="settingsInputFirstName" name="nombreUsuCopia" required>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label for="settingsPhoneNumber" class="form-label">Documento del Usuario a Copiar</label>
-                                                            <input type="text" class="form-control" id="settingsPhoneNumber" name="documentoUsuCopia" placeholder="xxxxxxxxxx" required>
-                                                        </div>
+                                                    <div class="col-md-6">
+                                                        <label for="settingsPhoneNumber" class="form-label">Documento del Usuario a Copiar</label>
+                                                        <input type="text" class="form-control" id="settingsPhoneNumber" name="documentoUsuCopia" placeholder="xxxxxxxxxx" required>
                                                     </div>
-                                                    <input type="text" name="solicitante" value="<?php echo $_SESSION["id_usuario"];?>" hidden>
-                                                    <input type="text" name="estado" value="PENDIENTE" hidden>
-                                                    <div class="row m-t-lg">
-                                                        <div class="col">
+                                                </div>
+                                                <input type="text" name="solicitante" value="<?php echo $_SESSION["id_usuario"]; ?>" hidden>
+                                                <input type="text" name="estado" value="PENDIENTE" hidden>
+                                                <div class="row m-t-lg">
+                                                    <div class="col">
 
-                                                            <button type="submit" name="enviar" class="btn btn-primary m-t-sm">Solicitar</button>
-                                                        </div>
+                                                        <button type="submit" name="enviar" class="btn btn-primary m-t-sm">Solicitar</button>
                                                     </div>
-                                                </form>
-                                            </div>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -149,7 +150,7 @@ if ($_SESSION['id_rol'] == 2){
     <script src="../assets/plugins/highlight/highlight.pack.js"></script>
     <script src="../assets/js/main.min.js"></script>
     <script src="../assets/js/custom.js"></script>
-    
+
 </body>
 
 </html>
