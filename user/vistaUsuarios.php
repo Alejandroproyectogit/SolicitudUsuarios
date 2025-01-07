@@ -75,7 +75,7 @@ $numeroSesion = $_SESSION['id_usuario'];
                             <div class="card">
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table id="datatable1" class="table" class="display" style="width:100%">
+                                        <table id="tabla" class="table" class="display" style="width:100%">
                                             <thead>
                                                 <tr>
                                                     <td>Tipo de Documento</td>
@@ -123,14 +123,6 @@ $numeroSesion = $_SESSION['id_usuario'];
     <script src="../assets/js/main.min.js"></script>
     <script src="../assets/js/custom.js"></script>
     <script src="../assets/js/pages/datatables.js"></script>
-    <script>
-        $('#datatable1').DataTable({
-        language: {
-            url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        order: [[0, 'desc']] 
-    });
-    </script>
 </body>
 
 </html>

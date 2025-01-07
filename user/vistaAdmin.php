@@ -102,13 +102,13 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
                             <label for="exampleFormControlInput1">Fecha Inicio:</label>
                             <input type="date" id="fechaInicio" class="form-control flatpickr1">
                         </div>
-                    
+
                         <div class="fechaFin">
                             <label for="exampleFormControlInput1">Fecha Final:</label>
                             <input type="date" id="fechaFin" class="form-control flatpickr1">
                         </div>
-                            
-                        
+
+
                     </div>
                     <div class="divider"></div>
                     <div class="row">
@@ -117,7 +117,7 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <div id="table-refresh">
-                                            <table id="datatable1" class="table display" style="width:100%">
+                                            <table id="tabla" class="table display" style="width:100%">
                                                 <thead>
                                                     <tr>
                                                         <td>Tipo de Documento</td>
@@ -137,38 +137,7 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
                                                     </tr>
                                                 </thead>
                                                 <tbody id="agregar-registros">
-                                                    <?php if (!empty($resultado)): ?>
-                                                        <?php foreach ($resultado as $fila): ?>
-                                                            <tr>
-                                                                <td><?php echo $fila["tipoDocumento"]; ?></td>
-                                                                <td><?php echo $fila["documento"]; ?></td>
-                                                                <td><?php echo $fila["nombres"]; ?></td>
-                                                                <td><?php echo $fila["apellidos"]; ?></td>
-                                                                <td><?php echo $fila["telefono"]; ?></td>
-                                                                <td><?php echo $fila["correo"]; ?></td>
-                                                                <td><?php echo $fila["cargo"]; ?></td>
-                                                                <td><?php echo $fila["nombreSistema"]; ?></td>
-                                                                <td><?php echo $fila["nombreUsuarioCopia"]; ?></td>
-                                                                <td><?php echo $fila["documentoUsuCopia"]; ?></td>
-                                                                <td><?php echo $fila["nombre"]; ?></td>
-                                                                <td><?php echo $fila["estado"]; ?></td>
-                                                                <td><?php echo $fila["fechaSolicitud"] ?></td>
-                                                                <td>
-                                                                    <?php if ($fila["estado"] === "PENDIENTE"): ?>
-                                                                        <form class="cambioEstado">
-                                                                            <input name="cambio" value="<?php echo $fila['id_solicitud']; ?>" hidden>
-                                                                            <button type="submit" class="btn btn-success align-middle"><span class="bi bi-check"></span></button>
-                                                                        </form>
-                                                                    <?php endif; ?>
-
-                                                                    <!--<form action="deleteSolicitudAdmin.php" method="POST">
-                                                                        <button type="submit" class="btn btn-danger align-middle" id="eliminarSolicitud" name="eliminarSolicitud" value="<?php echo $fila['id_solicitud']; ?>"><i class="bi bi-trash-fill"></i></button>
-                                                                    </form>-->
-                                                                </td>
-                                                            </tr>
-                                                            
-                                                        <?php endforeach; ?>
-                                                    <?php endif; ?>
+                                                    
                                                 </tbody>
 
 
@@ -198,19 +167,10 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
     <script src="../assets/js/main.min.js"></script>
     <script src="../assets/js/custom.js"></script>
     <script src="../assets/js/pages/datatables.js"></script>
-    <script>
-        $('#datatable1').DataTable({
-        language: {
-            url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        order: [[0, 'desc']] 
-    });
-    </script>
     <script type="text/javascript">
-        const formularios = document.querySelectorAll(".cambioEstado");
-
-        formularios.forEach((formulario) => {
-            formulario.addEventListener("submit", function(evento) {
+        $(document).ready(function() {
+            // Usamos delegación de eventos para capturar los eventos de formulario incluso después de actualizar la tabla
+            $(document).on('submit', '.cambioEstado', function(evento) {
                 evento.preventDefault();
 
                 const idEstado = new FormData(evento.target);
@@ -230,14 +190,14 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
                             text: resultado.message,
                             icon: "success"
                         }).then(() => {
-                            location.reload();
+                            $("#agregar-registros").load(window.location.href);
                         });
                     })
                     .catch((error) => console.error("error: ", error));
             });
         });
     </script>
-    
+
 
 
 
