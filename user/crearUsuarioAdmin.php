@@ -72,7 +72,7 @@ if ($_SESSION['id_rol'] == 2) {
                                                     <div class="col-md-6">
                                                         <label for="settingsPhoneNumber" class="form-label">Documento</label>
                                                         <input type="text" class="form-control" id="nDocumento" name="nDocumento" placeholder="xxxxxxxxxx" required>
-                                                        <div id="aviso" class="text-danger"></div>
+                                                        <div id="aviso" class="aviso text-danger"></div>
                                                     </div>
                                                 </div>
                                                 <div class="row m-t-lg">
@@ -145,6 +145,8 @@ if ($_SESSION['id_rol'] == 2) {
     <script src="../assets/js/main.min.js"></script>
     <script src="../assets/js/custom.js"></script>
     <script type="text/javascript">
+
+
         const formulario = document.getElementById("UsuarioNuevo");
 
         formulario.addEventListener("submit", function(evento) {
@@ -198,6 +200,36 @@ if ($_SESSION['id_rol'] == 2) {
                     });
                     console.error("Error en la solicitud:", error); // Log de error en consola para depuración
                 });
+        });
+        $("#nDocumento").on("keyup",function () {
+            var documento = $("#nDocumento").val();
+            var longitud = $("#nDocumento").val().length;
+            
+            if (longitud >= 1) {
+                $.ajax({
+                    url: "hola.php",
+                    type: "POST",
+                    data: {
+                        documento: documento
+                    },
+                    success: function(response) {
+                        if (response == 1) {
+                            $(".aviso").css("display", "flex");
+                            $("#aviso").html("La Cedula Ya Existe");
+                            $("#aviso").removeClass("text-success");
+                            $("#aviso").addClass("text-danger");
+                        } else {
+                            $(".aviso").css("display", "flex");
+                            $("#aviso").html("Cedula Valida");
+                            $("#aviso").removeClass("text-danger");
+                            $("#aviso").addClass("text-success");
+                        }
+                    }
+                })
+            }else{
+                $(".aviso").css("display", "none");
+
+            }
         });
     </script>
 

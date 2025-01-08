@@ -28,7 +28,7 @@ if ($data) {
         if (!$resultado) {
             $hash_contrasena = password_hash($contrasena, PASSWORD_BCRYPT);
 
-            $stmt = $con->prepare("INSERT INTO usuarios (tipoDocumento,documento,nombres,apellidos,usuario,contrasena,cargo,area,id_rol) VALUES (:tipoDoc,:nDoc,:nombres,:apellidos,:usuario,:contra,:cargo,:are,:id_rol)");
+            $stmt = $con->prepare("INSERT INTO usuarios (tipoDocumento,documento,nombre,apellidos,usuario,contrasena,cargo,area,id_rol) VALUES (:tipoDoc,:nDoc,:nombres,:apellidos,:usuario,:contra,:cargo,:are,:id_rol)");
 
             // Vincular parámetros
             $stmt->bindParam(":tipoDoc", $tipoDocumento, PDO::PARAM_STR);
