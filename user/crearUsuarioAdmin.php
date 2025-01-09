@@ -89,6 +89,7 @@ if ($_SESSION['id_rol'] == 2) {
                                                     <div class="col-md-6">
                                                         <label for="settingsInputFirstName" class="form-label">Usuario</label>
                                                         <input type="text" class="form-control" id="usuario" name="usuario" required>
+                                                        <div id="avisoUsuario" class="avisoUsuario text-danger"></div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="settingsInputFirstName" class="form-label">Contraseña</label>
@@ -118,7 +119,7 @@ if ($_SESSION['id_rol'] == 2) {
                                                     <div class="row m-t-lg">
                                                         <div class="col">
 
-                                                            <button type="submit" name="enviar" class="btn btn-primary m-t-sm">Crear</button>
+                                                            <button type="submit" name="enviar" id="enviar" class="btn btn-primary m-t-sm">Crear</button>
                                                         </div>
                                                     </div>
                                             </form>
@@ -207,7 +208,7 @@ if ($_SESSION['id_rol'] == 2) {
             
             if (longitud >= 1) {
                 $.ajax({
-                    url: "hola.php",
+                    url: "validarCedula.php",
                     type: "POST",
                     data: {
                         documento: documento
@@ -228,6 +229,39 @@ if ($_SESSION['id_rol'] == 2) {
                 })
             }else{
                 $(".aviso").css("display", "none");
+
+            }
+        });
+        $("#usuario").on("keyup",function () {
+            var usuario = $("#usuario").val();
+            var longitud = $("#usuario").val().length;
+            
+            if (longitud >= 1) {
+                $.ajax({
+                    url: "validarUsuario.php",
+                    type: "POST",
+                    data: {
+                        usuario: usuario
+                    },
+                    success: function(response) {
+                        if (response == 1) {
+                            $(".avisoUsuario").css("display", "flex");
+                            $("#avisoUsuario").html("Usuario Existente");
+                            $("#avisoUsuario").removeClass("text-success");
+                            $("#avisoUsuario").addClass("text-danger");
+                            $("#enviar").attr('disabled',true);
+                        } else {
+                            $(".avisoUsuario").css("display", "flex");
+                            $("#avisoUsuario").html("Usuario Valido");
+                            $("#avisoUsuario").removeClass("text-danger");
+                            $("#avisoUsuario").addClass("text-success");
+                            $("#enviar").attr('disabled',false);
+                        }
+                    }
+                })
+            }else{
+                $(".aviso").css("display", "none");
+                $(".avisoUsuario").css("display", "none");
 
             }
         });
