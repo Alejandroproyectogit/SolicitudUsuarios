@@ -12,44 +12,6 @@ if ($_SESSION['id_rol'] == 2) {
     exit();
 }
 
-
-require "../conexion/conexion.php";
-$mes_actual = date('m');  // 'm' devuelve el mes actual en formato 2 dígitos
-$anio_actual = date('Y'); // 'Y' devuelve el año actual en formato 4 dígitos
-
-$sql = "SELECT
-            s.id_solicitud,
-            s.tipoDocumento,
-            s.documento,
-            s.nombres,
-            s.apellidos,
-            s.telefono,
-            s.correo,
-            s.cargo,
-            sis.nombreSistema,
-            s.nombreUsuarioCopia,
-            s.documentoUsuCopia,
-            s.fechaSolicitud,
-            u.nombre,
-            s.estado
-        FROM
-            solicitudes s
-        INNER JOIN usuarios u ON
-            s.QuienSolicita = u.id
-        INNER JOIN sistemas_de_informacion sis ON
-            s.id_sistema = sis.id
-        WHERE s.estado = 'PENDIENTE' AND MONTH(fechaSolicitud) = $mes_actual AND YEAR(fechaSolicitud) = $anio_actual ORDER BY s.id_solicitud DESC
-        ";
-
-
-
-$ver = $con->prepare($sql);
-$ver->execute();
-$resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
-
-
-
-
 ?>
 
 
@@ -137,7 +99,7 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
                                                     </tr>
                                                 </thead>
                                                 <tbody id="agregar-registros">
-                                                    
+
                                                 </tbody>
 
 
@@ -172,28 +134,40 @@ $resultado = $ver->fetchAll(PDO::FETCH_ASSOC);
             // Usamos delegación de eventos para capturar los eventos de formulario incluso después de actualizar la tabla
             $(document).on('submit', '.cambioEstado', function(evento) {
                 evento.preventDefault();
+                Swal.fire({
+                    title: "Advertencia",
+                    text: "Cambiaras El Estado De La Solicitud",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#79b626",
+                    cancelButtonColor: "#ff3333",
+                    confirmButtonText: "Estoy Seguro",
+                    cancelButtonText: "Cancelar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const idEstado = new FormData(evento.target);
+                        const idEnviado = Object.fromEntries(idEstado.entries());
 
-                const idEstado = new FormData(evento.target);
-                const idEnviado = Object.fromEntries(idEstado.entries());
-
-                fetch("cambioEstado.php", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(idEnviado),
-                    })
-                    .then((response) => response.json())
-                    .then((resultado) => {
-                        Swal.fire({
-                            title: "EXITO",
-                            text: resultado.message,
-                            icon: "success"
-                        }).then(() => {
-                            $("#agregar-registros").load(window.location.href);
-                        });
-                    })
-                    .catch((error) => console.error("error: ", error));
+                        fetch("cambioEstado.php", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify(idEnviado),
+                            })
+                            .then((response) => response.json())
+                            .then((resultado) => {
+                                Swal.fire({
+                                    title: "EXITO",
+                                    text: resultado.message,
+                                    icon: "success"
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            })
+                            .catch((error) => console.error("error: ", error));
+                    }
+                });
             });
         });
     </script>
