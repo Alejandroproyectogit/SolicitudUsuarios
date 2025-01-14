@@ -53,9 +53,9 @@ $numeroSesion = $_SESSION['id_usuario'];
                         <div class="filtroEstado">
                             <label for="exampleFormControlInput1">Filtrar por estado:</label>
                             <select id="asignarFiltro" name="asignarFiltro" class="form-select" aria-label="Default select example">
+                                <option value="TODO">Todos</option>
                                 <option value="PENDIENTE">Pendientes</option>
                                 <option value="CREADO">Realizados</option>
-                                <option value="TODO">Todos</option>
                             </select>
                         </div>
                         <div class="fechaInicio">
@@ -78,19 +78,19 @@ $numeroSesion = $_SESSION['id_usuario'];
                                         <table id="tabla" class="table" class="display" style="width:100%">
                                             <thead>
                                                 <tr>
-                                                    <td>Tipo de Documento</td>
-                                                    <td>Documento</td>
-                                                    <td>Nombre</td>
-                                                    <td>Apellidos</td>
-                                                    <td>Telefono</td>
-                                                    <td>Correo</td>
-                                                    <td>Cargo</td>
-                                                    <td>Sistemas requerido</td>
-                                                    <td>Usuario a Copiar</td>
-                                                    <td>Documento</td>
-                                                    <td>Cuando Se Solicito</td>
-                                                    <td>Quien Solicita</td>
-                                                    <td>Estado</td>
+                                                    <th>Tipo de Documento</th>
+                                                    <th>Documento</th>
+                                                    <th>Nombre</th>
+                                                    <th>Apellidos</th>
+                                                    <th>Telefono</th>
+                                                    <th>Correo</th>
+                                                    <th>Cargo</th>
+                                                    <th>Sistemas requerido</th>
+                                                    <th>Usuario a Copiar</th>
+                                                    <th>Documento</th>
+                                                    <th>Cuando Se Solicito</th>
+                                                    <th>Quien Solicita</th>
+                                                    <th>Estado</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="registros">

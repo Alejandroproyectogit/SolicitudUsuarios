@@ -76,7 +76,44 @@ if ($result) {
                         <button type='submit' class='btn btn-success align-middle'><span class='bi bi-check'></span></button>
                     </form>
                 </td>";
+            /*echo "<td>
+                    <!-- Button trigger modal -->
+                    <button type='button' class='btn btn-success align-middle' data-bs-toggle='modal' data-bs-target='#exampleModal{$fila['id_solicitud']}'>
+                        <span class='bi bi-check'></span>
+                    </button>
+
+                    <!-- Modal -->
+                    <div class='modal fade' id='exampleModal{$fila['id_solicitud']}' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
+                        <div class='modal-dialog'>
+                            <div class='modal-content'>
+                                <form>
+                                    <div class='modal-header'>
+                                        <h5 class='modal-title' id='exampleModalLabel'>Información del Usuario Creado</h5>
+                                        <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                                    </div>
+                                    <div class='modal-body'>
+                                        <input type='hidden' value='{$fila['id_solicitud']}'>
+                                        <label for='exampleInputEmail1' class='form-label'>Sistema</label>
+                                        <input type='text' class='form-control' id='exampleInputEmail1' aria-describedby='emailHelp' value='{$fila['nombreSistema']}' readonly>
+                                        <label for='exampleInputEmail1' class='form-label'>Usuario</label>
+                                        <input type='email' class='form-control' id='exampleInputEmail1' aria-describedby='emailHelp'>
+                                        <label for='exampleInputEmail1' class='form-label'>Contraseña</label>
+                                        <input type='password' class='form-control form-control-solid-bordered' id='exampleInputEmail1' aria-describedby='emailHelp'>
+                                        <label for='exampleInputEmail1' class='form-label'>Comentarios</label>
+                                        <textarea class='form-control'></textarea>
+                                    </div>
+                                    <div class='modal-footer'>
+                                        <button type='button' class='btn btn-success'>Enviar Datos</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </td>";*/
+        }else{
+            echo "<td>ninguna acción</td>";
         };
+        echo "</tr>";
     }
 }else{
     echo "<tr><td colspan='13' class='text-center'>No hay resultados.</td></tr>";

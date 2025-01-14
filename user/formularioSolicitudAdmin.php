@@ -113,11 +113,11 @@ if ($_SESSION['id_rol'] == 2) {
                                                 <div class="row m-t-lg">
                                                     <div class="col-md-6">
                                                         <label for="settingsInputFirstName" class="form-label">Nombre del Usuario a Copiar</label>
-                                                        <input type="text" class="form-control" id="settingsInputFirstName" name="nombreUsuCopia" required>
+                                                        <input type="text" class="form-control" id="settingsInputFirstName" name="nombreUsuCopia">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="settingsPhoneNumber" class="form-label">Documento del Usuario a Copiar</label>
-                                                        <input type="text" class="form-control" id="settingsPhoneNumber" name="documentoUsuCopia" placeholder="xxxxxxxxxx" required>
+                                                        <input type="text" class="form-control" id="settingsPhoneNumber" name="documentoUsuCopia" placeholder="xxxxxxxxxx">
                                                     </div>
                                                 </div>
                                                 <input type="text" name="solicitante" value="<?php echo $_SESSION["id_usuario"]; ?>" hidden>

@@ -13,6 +13,7 @@ if ($data) {
     $cargo = htmlspecialchars($data["cargo"]);
     $area = htmlspecialchars($data["area"]);
     $id_rol = htmlspecialchars($data["rol"]);
+/*     $vencimientoClave = date("Y-m-d H:i:s", strtotime('+1 year')); */
 
     if (
         !empty($tipoDocumento) && !empty($nDocumento) && !empty($nombres) &&
@@ -28,7 +29,7 @@ if ($data) {
         if (!$resultado) {
             $hash_contrasena = password_hash($contrasena, PASSWORD_BCRYPT);
 
-            $stmt = $con->prepare("INSERT INTO usuarios (tipoDocumento,documento,nombre,apellidos,usuario,contrasena,cargo,area,id_rol) VALUES (:tipoDoc,:nDoc,:nombres,:apellidos,:usuario,:contra,:cargo,:are,:id_rol)");
+            $stmt = $con->prepare("INSERT INTO usuarios (tipoDocumento,documento,nombre,apellidos,usuario,contrasena,cargo,area,id_rol/* ,estado,vencimientoClave */) VALUES (:tipoDoc,:nDoc,:nombres,:apellidos,:usuario,:contra,:cargo,:are,:id_rol/* ,'ACTIVO',:vencimientoClave */)");
 
             // Vincular parámetros
             $stmt->bindParam(":tipoDoc", $tipoDocumento, PDO::PARAM_STR);
@@ -40,6 +41,7 @@ if ($data) {
             $stmt->bindParam(":cargo", $cargo, PDO::PARAM_STR);
             $stmt->bindParam(":are", $area, PDO::PARAM_STR);
             $stmt->bindParam(":id_rol", $id_rol, PDO::PARAM_INT);
+            /* $stmt->bindParam(":vencimientoClave",$vencimientoClave, PDO::PARAM_STR); */
             $result = $stmt->execute();
 
             if ($result) {

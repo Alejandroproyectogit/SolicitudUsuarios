@@ -10,16 +10,15 @@ $telefono = $_POST["telefono"];
 $correo = $_POST["correo"];
 $cargo = $_POST["cargo"];
 $sistemas = isset($_POST["sistemas"]) ? $_POST["sistemas"] : [];
-$nombreUsuCopia = $_POST["nombreUsuCopia"];
-$documentoUsuCopia = $_POST["documentoUsuCopia"];
+$nombreUsuCopia = !empty($_POST["nombreUsuCopia"]) ? $_POST["nombreUsuCopia"] : null;
+$documentoUsuCopia = !empty($_POST["documentoUsuCopia"]) ? $_POST["documentoUsuCopia"] : null;
 $solicitante = $_POST["solicitante"];
 $estado = $_POST["estado"];
 
 if (
     !empty($tipoDocumento) && !empty($nDocumento) && !empty($nombres) &&
     !empty($apellidos) && !empty($telefono) && !empty($correo) && !empty($cargo) &&
-    !empty($sistemas) && !empty($nombreUsuCopia) &&
-    !empty($documentoUsuCopia) && !empty($solicitante) && !empty($estado)
+    !empty($sistemas) && !empty($solicitante) && !empty($estado)
 ) {
 
     foreach ($sistemas as $sistema) {
