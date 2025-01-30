@@ -18,7 +18,7 @@ $usuario = $_POST["usuario"];
 $contrasena = $_POST["contrasena"];
 $comentario = $_POST["comentario"];
 
-if (empty($comentario)){
+if (empty($comentario)) {
     $comentario = "NINGUN COMENTARIO";
 }
 
@@ -36,7 +36,7 @@ if (!empty($idUsuRespuesta) && !empty($id) && !empty($usuario) && !empty($contra
         $obtenerCorreo->bindParam(":idSol", $id, PDO::PARAM_INT);
         $obtenerCorreo->execute();
         $result = $obtenerCorreo->fetch();
-        if ($result){
+        if ($result) {
             $correo = $result['correo'];
 
             $oMail = new PHPMailer();
@@ -54,67 +54,120 @@ if (!empty($idUsuRespuesta) && !empty($id) && !empty($usuario) && !empty($contra
 
             // Cuerpo del correo HTML con estilos CSS y una imagen
             $oMail->Body = "
-            <html>
-            <head>
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        background-color: #f4f4f4;
-                        color: #333;
-                        margin: 0;
-                        padding: 0;
-                    }
-                    .container {
-                        width: 100%;
-                        max-width: 600px;
-                        margin: 0 auto;
-                        background-color: #fff;
-                        padding: 20px;
-                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                    }
-                    h1 {
-                        color:rgb(240, 188, 16);
-                    }
-                    p {
-                        font-size: 16px;
-                        line-height: 1.5;
-                    }
-                    .footer {
-                        margin-top: 30px;
-                        text-align: center;
-                        font-size: 12px;
-                        color: #888;
-                    }
-                </style>
-            </head>
-            <body>
-                <div class='container'>
-                    <h1>Hola, tu usuario para " . $nomSistema . " es:</h1>
-                    <p><strong>Usuario:</strong> " . $usuario . "</p>
-                    <p><strong>Contraseña:</strong> " . $contrasena . "</p>
-                    <p><strong>Comentarios:</strong> " . $comentario . "</p>
+                <html>
+                <head>
+                    <style>
+                        body {
+                            font-family: 'Arial', sans-serif;
+                            background-color: #f7f7f7;
+                            margin: 0;
+                            padding: 0;
+                            color: #333;
+                        }
+                        .container {
+                            width: 100%;
+                            max-width: 650px;
+                            margin: 40px auto;
+                            background-color: #ffffff;
+                            padding: 30px;
+                            border-radius: 10px;
+                            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                        }
+                        .header {
+                            text-align: center;
+                            margin-bottom: 20px;
+                            color:rgb(218, 146, 11);
+                        }
+                        .header h2 {
+                            margin: 0;
+                            font-size: 26px;
+                        }
+                        .content {
+                            font-size: 15px;
+                            line-height: 1.6;
+                        }
+                        .content p {
+                            margin-bottom: 15px;
+                        }
+                        .credential {
+                            background-color: #ecf0f1;
+                            padding: 12px;
+                            margin: 12px 0;
+                            border-radius: 6px;
+                            font-size: 16px;
+                            color: #2c3e50;
+                            font-weight: bold;
+                        }
+                        .comment {
+                            background-color: #f9f9f9;
+                            padding: 15px;
+                            margin: 20px 0;
+                            border-left: 5px solid rgb(99, 172, 56);
+                            font-size: 14px;
+                            color: #555;
+                        }
+                        .footer {
+                            text-align: center;
+                            font-size: 12px;
+                            color: #777;
+                            margin-top: 25px;
+                        }
+                        .footer span {
+                            color: #3498db;
+                            text-decoration: none;
+                        }
+                        .highlight {
+                            color: #e74c3c;
+                        }
+                    </style>
+                </head>
+                <body>
 
-                    
+                <div class='container'>
+                    <div class='header'>
+                        <h2>Información de solicitud</h2>
+                    </div>
+
+                    <div class='content'>
+                        <p>Hola, a continuación te compartimos el usuario solicitado para el sistema <strong>" . $nomSistema . ":</strong></p>
+
+                        <div class='credential'>
+                            <strong>Usuario:</strong> " . $usuario . "
+                        </div>
+
+                        <div class='credential'>
+                            <strong>Contraseña:</strong> " . $contrasena . "
+                        </div>
+
+                        <div class='comment'>
+                            <strong>Comentario:</strong>
+                            <p>" . $comentario . "</p>
+                        </div>
+
+                        <p>Recuerda no compartir esta información, es por tu seguridad y la de nosotros.</p>
+                    </div>
+
                     <div class='footer'>
-                        <p>Este es un correo automático. No respondas a este mensaje.</p>
+                        <p>Si tienes alguna pregunta, no dudes en ponerte en <span>contacto</span> con nuestro soporte.</p>
+                        <p><strong>&copy; ".date("Y")." Clinaltec</strong>. Todos los derechos reservados.</p>
                     </div>
                 </div>
-            </body>
-            </html>
+
+                </body>
+                </html>
+
             ";
 
 
-            
+
             if (!$oMail->send()) {
                 echo json_encode(["status" => "error", "message" => $oMail->ErrorInfo]);
-            }else{
+            } else {
                 echo json_encode(["status" => "success", "message" => "Solicitud Cumplida"]);
             }
-            
-        }else{
+        } else {
             echo json_encode(["status" => "error", "message" => "Error Al Obtener Correo"]);
         }
-
     } else {
         echo json_encode(["status" => "error", "message" => "Error Al Cumplir La Solicitud"]);
     }

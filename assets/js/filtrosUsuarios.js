@@ -17,8 +17,17 @@ $(document).ready(function () {
                 numeroSesion: numeroSesion
             },
             success: function (datos) {
-                $("#registros").html(datos);
-                if (!$.fn.dataTable.isDataTable('#tabla')) {
+                if ($.fn.dataTable.isDataTable('#tabla')) {
+                    $('#tabla').DataTable().destroy();
+                    $("#registros").html(datos);
+                    $('#tabla').DataTable({
+                        language: {
+                            url: "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
+                        },
+                        order: [[0, 'desc']]
+                    });
+                }else if(!$.fn.dataTable.isDataTable('#tabla')){
+                    $("#registros").html(datos);
                     $('#tabla').DataTable({
                         language: {
                             url: "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
