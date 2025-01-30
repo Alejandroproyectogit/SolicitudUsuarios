@@ -1,6 +1,6 @@
 <?php
 require "../conexion/conexion.php";
-
+session_start();
 date_default_timezone_set('America/Bogota');
 
 $fechaInicio = $_POST["fechaInicio"];
@@ -60,6 +60,7 @@ if ($resultado) {
     foreach ($resultado as $fila) {
         echo "
             <tr>
+            <td>".$fila["id_solicitud"]."</td>
             <td>".$fila["tipoDocumento"]."</td>
             <td>".$fila["documento"]."</td>
             <td>".$fila["nombres"]."</td>
@@ -72,9 +73,39 @@ if ($resultado) {
             <td>".$fila["documentoUsuCopia"]."</td>
             <td>".$fila["fechaSolicitud"]."</td>
             <td>".$fila["nombre"]."</td>
-            <td>".$fila["estado"]."</td>
-            </tr>
-        ";
+            <td>".$fila["estado"]."</td>";
+            if ($fila["estado"] == "PENDIENTE"){
+                echo "<td><p class='btn btn-light align-middle'><span class='bi bi-clock-fill'></span></p></td>";
+            }else{
+                echo "<td>
+                    <!-- Button trigger modal -->
+                    <button type='button' class='btn btn-dark align-middle' data-bs-toggle='modal' data-bs-target='#verInfo{$fila['id_solicitud']}'>
+                        <span class='bi bi-eye'></span>
+                    </button>
+
+                    <div class='modal fade contraModal' id='verInfo{$fila['id_solicitud']}' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
+                        <div class='modal-dialog modal-dialog-centered'>
+                            <div class='modal-content'>
+                                <form class='validarContraUsuario'>
+                                    <div class='modal-header'>
+                                        <h5 class='modal-title' id='exampleModalLabel'>Contraseña</h5>
+                                        <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                                    </div>
+                                    <div class='modal-body'>
+                                        <input type='hidden' class='idUsuario' value='{$_SESSION['id_usuario']}'>
+                                        <input type='hidden' class='id_solicitud' value='{$fila['id_solicitud']}'>
+                                        <input type='password' class='contra form-control form-control-solid-bordered' aria-describedby='emailHelp' required>
+                                    </div>
+                                    <div class='modal-footer'>
+                                        <button type='submit' class='valContra btn btn-success'>Validar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </td>";
+            }
+            "</tr>";
     }
 }else{
     echo "<tr><td colspan='13' class='text-center'>No hay resultados.</td></tr>";

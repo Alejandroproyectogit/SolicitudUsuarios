@@ -45,11 +45,18 @@
         </div>
         <div class="app-auth-container">
             <div class="logo">
+
+            <!--  Mensaje de error si no puede ingresar el usuario -->
             <?php 
                 if (!empty($_GET["error"])){
                     if ($_GET["error"] == 1) {
-                       echo" <div class='alert alert-danger alert-style-light' role='alert'>
-                            CREDENCIALES INCORRECTAS
+                        echo" <div class='alert alert-danger alert-style-light' role='alert'>
+                            ACCESO DENEGADO
+                        </div>
+                        <div class='divider'></div>";
+                    } else if ($_GET["error"] == 2) {
+                        echo" <div class='alert alert-danger alert-style-light' role='alert'>
+                            CAMPOS VACIOS
                         </div>
                         <div class='divider'></div>";
                     }
@@ -59,6 +66,8 @@
             </div>
             
             <div class="divider"></div>
+
+                <!-- Inputs del login que enviaran los datos al archivo index por url -->
 
             <form action="index.php?accion=validarCredenciales" method="POST">
                 <div class="auth-credentials m-b-xxl">
@@ -71,7 +80,7 @@
 
                 <div class="auth-submit">
                     <button type="submit" class="btn btn-primary">Ingresar</button>
-                    
+                    <a href="recuperarContrasena.php" class="auth-forgot-password float-end">¿Olvidaste tu contraseña?</a>
                 </div>
             </form>
             <div class="divider"></div>

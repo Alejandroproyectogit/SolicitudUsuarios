@@ -71,7 +71,7 @@ if ($_SESSION['id_rol'] == 2) {
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="settingsPhoneNumber" class="form-label">Documento</label>
-                                                        <input type="text" class="form-control" id="nDocumento" name="nDocumento" placeholder="xxxxxxxxxx" required>
+                                                        <input type="text" class="form-control" id="nDocumento" name="nDocumento" maxlength="10" placeholder="xxxxxxxxxx" required>
                                                         <div id="aviso" class="aviso text-danger"></div>
                                                     </div>
                                                 </div>
@@ -87,27 +87,31 @@ if ($_SESSION['id_rol'] == 2) {
                                                 </div>
                                                 <div class="row m-t-lg">
                                                     <div class="col-md-6">
+                                                        <label for="settingsInputFirstName" class="form-label">correo</label>
+                                                        <input type="text" class="form-control" id="correo" name="correo" required>
+                                                    </div>
+                                                    <div class="col-md-6">
                                                         <label for="settingsInputFirstName" class="form-label">Usuario</label>
                                                         <input type="text" class="form-control" id="usuario" name="usuario" required>
                                                         <div id="avisoUsuario" class="avisoUsuario text-danger"></div>
                                                     </div>
+                                                </div>
+                                                <div class="row m-t-lg">
                                                     <div class="col-md-6">
                                                         <label for="settingsInputFirstName" class="form-label">Contraseña</label>
                                                         <input type="password" class="form-control" id="contrasena" name="contrasena" required>
                                                     </div>
-                                                </div>
-                                                <div class="row m-t-lg">
                                                     <div class="col-md-6">
                                                         <label for="settingsPhoneNumber" class="form-label">Cargo</label>
                                                         <input type="text" class="form-control" id="cargo" name="cargo" required>
                                                     </div>
+
+                                                </div>
+                                                <div class="row m-t-lg">
                                                     <div class="col-md-6">
                                                         <label for="settingsInputFirstName" class="form-label">Area</label>
                                                         <input type="text" class="form-control" id="area" name="area" required>
                                                     </div>
-
-                                                </div>
-                                                <div class="row m-t-lg">
                                                     <div class="col-md-6">
                                                         <label for="settingsState" class="form-label">Rol del Usuario</label>
                                                         <select class="js-states form-control" id="rol" name="rol" tabindex="-1" style="width: 100%">

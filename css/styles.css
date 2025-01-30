@@ -17,6 +17,10 @@
     width: 20%;
 }
 
+.borrarFiltro{
+    width: 79%;
+}
+
 .rangoFechas{
     width: 70%;
     gap: 3%;

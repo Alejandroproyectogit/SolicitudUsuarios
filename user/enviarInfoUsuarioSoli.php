@@ -1,0 +1,147 @@
+<?php
+require "../conexion/conexion.php";
+require "../assets/plugins/PHPMailer/Exception.php";
+require "../assets/plugins/PHPMailer/PHPMailer.php";
+require "../assets/plugins/PHPMailer/SMTP.php";
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+// Datos para desencriptar
+define('ENCRYPTION_KEY', 'ABwVQ$gYH2Xn^QjfadEEB9LzuT!yinb%'); // 32 caracteres
+define('IV', '1234567890abcdef'); // 16 caracteres
+$cipher = "AES-256-CBC";
+
+$id = $_POST["id_solicitud"];
+$idUsuRespuesta = $_POST["idUsuRespuesta"];
+$nomSistema = $_POST["nomSistema"];
+$usuario = $_POST["usuario"];
+$contrasena = $_POST["contrasena"];
+$comentario = $_POST["comentario"];
+
+if (empty($comentario)){
+    $comentario = "NINGUN COMENTARIO";
+}
+
+if (!empty($idUsuRespuesta) && !empty($id) && !empty($usuario) && !empty($contrasena)) {
+    $encrypted = openssl_encrypt($contrasena, $cipher, ENCRYPTION_KEY, 0, IV);
+    $stmt = $con->prepare("UPDATE solicitudes SET idUsuRespuesta = :idUsuRespuesta, usuario = :usuarioRes, contrasena = :contRes, comentario = :comentarioRes, estado = 'CREADO' WHERE id_solicitud = :id");
+    $stmt->bindParam(":idUsuRespuesta", $idUsuRespuesta, PDO::PARAM_INT);
+    $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+    $stmt->bindParam(":usuarioRes", $usuario, PDO::PARAM_STR);
+    $stmt->bindParam(":contRes", $encrypted);
+    $stmt->bindParam(":comentarioRes", $comentario, PDO::PARAM_STR);
+    $resultado = $stmt->execute();
+    if ($resultado) {
+        $obtenerCorreo = $con->prepare("SELECT correo FROM solicitudes WHERE id_solicitud = :idSol");
+        $obtenerCorreo->bindParam(":idSol", $id, PDO::PARAM_INT);
+        $obtenerCorreo->execute();
+        $result = $obtenerCorreo->fetch();
+        if ($result){
+            $correo = $result['correo'];
+
+            $oMail = new PHPMailer();
+            $oMail->isSMTP();
+            $oMail->Host = 'smtp.gmail.com';
+            $oMail->Port = 587;
+            $oMail->SMTPSecure = 'tls';
+            $oMail->SMTPAuth = true;
+            $oMail->Username = 'pepeperez123prueba@gmail.com';
+            $oMail->Password = 'avcb fahj hxvh qypb';
+            $oMail->setFrom('pepeperez123prueba@gmail.com', 'Respuesta De La Solicitud De Usuario');
+            $oMail->addAddress($correo);
+            $oMail->isHTML(true); // Indicamos que el contenido es HTML
+            $oMail->Subject = 'Solicitud De Usuario';
+
+            // Cuerpo del correo HTML con estilos CSS y una imagen
+            $oMail->Body = "
+            <html>
+            <head>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #f4f4f4;
+                        color: #333;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    .container {
+                        width: 100%;
+                        max-width: 600px;
+                        margin: 0 auto;
+                        background-color: #fff;
+                        padding: 20px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        color:rgb(240, 188, 16);
+                    }
+                    p {
+                        font-size: 16px;
+                        line-height: 1.5;
+                    }
+                    .footer {
+                        margin-top: 30px;
+                        text-align: center;
+                        font-size: 12px;
+                        color: #888;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class='container'>
+                    <h1>Hola, tu usuario para " . $nomSistema . " es:</h1>
+                    <p><strong>Usuario:</strong> " . $usuario . "</p>
+                    <p><strong>Contraseña:</strong> " . $contrasena . "</p>
+                    <p><strong>Comentarios:</strong> " . $comentario . "</p>
+
+                    
+                    <div class='footer'>
+                        <p>Este es un correo automático. No respondas a este mensaje.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            ";
+
+
+            
+            if (!$oMail->send()) {
+                echo json_encode(["status" => "error", "message" => $oMail->ErrorInfo]);
+            }else{
+                echo json_encode(["status" => "success", "message" => "Solicitud Cumplida"]);
+            }
+            
+        }else{
+            echo json_encode(["status" => "error", "message" => "Error Al Obtener Correo"]);
+        }
+
+    } else {
+        echo json_encode(["status" => "error", "message" => "Error Al Cumplir La Solicitud"]);
+    }
+} else {
+    echo json_encode(["status" => "error", "message" => "Datos vacíos"]);
+}
+
+
+/* // Datos para desencriptar
+define('ENCRYPTION_KEY', 'sI3peyUCdfsdfsdfsA'); // 32 caracteres
+define('IV', '1234567890abcdef'); // 16 caracteres
+
+// Función para desencriptar
+function decrypt($data)
+{
+    $cipher = "AES-256-CBC";
+    $decodedData = urldecode($data); // Decodificar desde la URL
+    return openssl_decrypt($decodedData, $cipher, ENCRYPTION_KEY, 0, IV);
+}
+
+$cedulaJefe = htmlspecialchars($_POST['NOMBRE_JEFE_INMEDIATO']);
+$cedulaJefe = decrypt($cedulaJefe);
+
+// Función para encriptar
+function encrypt($data)
+{
+    $cipher = "AES-256-CBC";
+    $encrypted = openssl_encrypt($data, $cipher, ENCRYPTION_KEY, 0, IV);
+    return urlencode($encrypted); // Codificar para URL
+} */

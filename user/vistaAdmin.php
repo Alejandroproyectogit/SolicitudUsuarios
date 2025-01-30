@@ -2,10 +2,14 @@
 
 session_start();
 
+//Se valida si la variable "$_SESSION['id_usuario']" no esta vacia y no es null, si esta vacia o es null, no dejara acceder a esta vista.
+
 if (!isset($_SESSION['id_usuario'])) {
     header('Location: ../index.php');
     exit();
 }
+
+//Si la variable "$_SESSION['id_rol'] == 2" entonces no dejara acceder a esta vista.
 
 if ($_SESSION['id_rol'] == 2) {
     header('Location: vistaUsuarios.php');
@@ -13,9 +17,6 @@ if ($_SESSION['id_rol'] == 2) {
 }
 
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -31,7 +32,7 @@ if ($_SESSION['id_rol'] == 2) {
                 <a href="#" class="logo-icon"><span class="logo-text">Clinaltec</span></a>
                 <div class="sidebar-user-switcher user-activity-online">
                     <a href="#">
-
+                        <!--Se obtiene la varible "$_SESSION['nombre']" para saludar al usuario-->
                         <span class="user-info-text">Bienvenid@ <?php echo $_SESSION['nombre']; ?> <br><span class="user-state-info">Administrador</span><span class="activity-indicator"></span></span>
                     </a>
                 </div>
@@ -52,6 +53,7 @@ if ($_SESSION['id_rol'] == 2) {
                     </div>
                     <div class="divider"></div>
                     <div class="d-flex justify-content-between">
+                        <!--Filtro por estado-->
                         <div class="filtroEstado">
                             <label for="exampleFormControlInput1">Filtrar por estado:</label>
                             <select id="asignarFiltro" name="asignarFiltro" class="form-select" aria-label="Default select example">
@@ -60,6 +62,8 @@ if ($_SESSION['id_rol'] == 2) {
                                 <option value="CREADO">Realizados</option>
                             </select>
                         </div>
+
+                        <!--Filtro por fechas-->
                         <div class="fechaInicio">
                             <label for="exampleFormControlInput1">Fecha Inicio:</label>
                             <input type="date" id="fechaInicio" class="form-control flatpickr1">
@@ -68,6 +72,9 @@ if ($_SESSION['id_rol'] == 2) {
                         <div class="fechaFin">
                             <label for="exampleFormControlInput1">Fecha Final:</label>
                             <input type="date" id="fechaFin" class="form-control flatpickr1">
+                        </div>
+                        <div class="btnReset">
+                            <button class="btn btn-info mt-4 borrarFiltro"><i class="bi bi-arrow-repeat"></i></button>
                         </div>
 
 
@@ -79,9 +86,13 @@ if ($_SESSION['id_rol'] == 2) {
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <div id="table-refresh">
+
+                                            <!--Tabla en donde apareceran las solicitudes-->
+
                                             <table id="tabla" class="table display" style="width:100%">
                                                 <thead>
                                                     <tr>
+                                                        <th>#</th>
                                                         <th>Tipo de Documento</th>
                                                         <th>Documento</th>
                                                         <th>Nombre</th>
@@ -98,6 +109,7 @@ if ($_SESSION['id_rol'] == 2) {
                                                         <th>Acción</th>
                                                     </tr>
                                                 </thead>
+                                                <!--Los Registros apareceran por respuesta ajax-->
                                                 <tbody id="agregar-registros">
 
                                                 </tbody>
@@ -119,6 +131,7 @@ if ($_SESSION['id_rol'] == 2) {
     <!-- Javascripts -->
     <script src="../assets/plugins/jquery/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- A este archivo van los datos del filtro -->
     <script src="../assets/js/filtroFechaAdmin.js"></script>
     <script src="../assets/plugins/bootstrap/js/popper.min.js"></script>
     <script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
@@ -131,43 +144,116 @@ if ($_SESSION['id_rol'] == 2) {
     <script src="../assets/js/pages/datatables.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            // Usamos delegación de eventos para capturar los eventos de formulario incluso después de actualizar la tabla
-            $(document).on('submit', '.cambioEstado', function(evento) {
+
+            $(document).on('submit', '.formRespuestaSolicitud', function(evento) {
                 evento.preventDefault();
                 Swal.fire({
                     title: "Advertencia",
-                    text: "Cambiaras El Estado De La Solicitud",
+                    text: "¿Estas Seguro De Realizar Esta Acción?",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#79b626",
                     cancelButtonColor: "#ff3333",
-                    confirmButtonText: "Estoy Seguro",
+                    confirmButtonText: "Confirmar",
                     cancelButtonText: "Cancelar"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        const idEstado = new FormData(evento.target);
-                        const idEnviado = Object.fromEntries(idEstado.entries());
+                        const id_solicitud = $(this).find(".id_solicitud").val();
+                        const idUsuRespuesta = $(this).find(".idUsuRespuesta").val(); 
+                        const nomSistema = $(this).find(".nomSistema").val();                        
+                        const usuario = $(this).find(".usuario").val();
+                        const contrasena = $(this).find(".contrasena").val();
+                        const comentario = $(this).find(".comentario").val();
 
-                        fetch("cambioEstado.php", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify(idEnviado),
-                            })
-                            .then((response) => response.json())
-                            .then((resultado) => {
+                        $.ajax({
+                            method: "POST",
+                            url: "enviarInfoUsuarioSoli.php",
+                            data: {                            
+                                id_solicitud: id_solicitud,
+                                idUsuRespuesta: idUsuRespuesta,
+                                nomSistema: nomSistema,
+                                usuario: usuario,
+                                contrasena: contrasena,
+                                comentario: comentario
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                if (response.status == "success") {
+                                    Swal.fire({
+                                        title: "EXITO",
+                                        text: response.message,
+                                        icon: "success"
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                } else if (response.status == "error") {
+                                    Swal.fire({
+                                        title: "ERROR",
+                                        text: response.message,
+                                        icon: "error"
+                                    });
+                                }
+                            },
+                            error: function(xhr, status, error) {
                                 Swal.fire({
-                                    title: "EXITO",
-                                    text: resultado.message,
-                                    icon: "success"
-                                }).then(() => {
-                                    location.reload();
+                                    title: "ERROR",
+                                    text: xhr.responseText,
+                                    icon: "error"
                                 });
-                            })
-                            .catch((error) => console.error("error: ", error));
+                            }
+                        });
+                    };
+                });
+            });
+
+            $(document).on('submit', '.validarContra', function(event) {
+                event.preventDefault();
+
+                const idUsuResp = $(this).find(".idUsuResp").val();
+                const id_solicitud = $(this).find(".id_solicitud").val();
+                const contrasena = $(this).find(".contra").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "validarContra.php",
+                    data: {
+                        idUsuResp: idUsuResp,
+                        id_solicitud: id_solicitud,
+                        contrasena: contrasena
+                    },
+                    dataType: "json",
+                    success: function(response) {
+                        if (response.status == "success") {
+                            $(".contraModal").modal('hide');
+                            $(".contra").val("");
+                            Swal.fire({
+                                html: `
+                                    <div class='modal-header'>
+                                        <h5 class='modal-title' id='exampleModalLabel'>Datos</h5>
+                                    </div>
+                                    <div class='modal-body'>
+                                        <label for='labelUsuario' class='form-label'>Usuario:</label>
+                                        <input type='text' class='form-control' aria-describedby='emailHelp' value="${response.dato1}" style='background-color: white;' disabled><br>
+                                        <label for='labelContrasena' class='form-label'>Contraseña:</label>
+                                        <input type='text' class='form-control' aria-describedby='emailHelp' value="${response.dato2}" style='background-color: white;' disabled><br>
+                                        <label for='labelComen' class='form-label'>Comentario:</label>
+                                        <textarea class='form-control' style='background-color: white;' disabled>${response.dato3}</textarea>
+                                    </div>
+                                `,
+                                confirmButtonText: "Cerrar"
+                            });
+                        } else if (response.status == "error") {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error",
+                                text: response.message
+                            });
+                        }
+                        
                     }
                 });
+
+
             });
         });
     </script>

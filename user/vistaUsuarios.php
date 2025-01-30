@@ -67,6 +67,9 @@ $numeroSesion = $_SESSION['id_usuario'];
                             <label for="exampleFormControlInput1">Fecha Final:</label>
                             <input type="date" id="fechaFin" class="form-control flatpickr1">
                         </div>
+                        <div class="btnReset">
+                            <button class="btn btn-info mt-4 borrarFiltro"><i class="bi bi-arrow-repeat"></i></button>
+                        </div>
                         <input type="hidden" id="numeroSesion" value="<?php echo $numeroSesion?>">
                     </div>
                     <div class="divider"></div>
@@ -78,6 +81,7 @@ $numeroSesion = $_SESSION['id_usuario'];
                                         <table id="tabla" class="table" class="display" style="width:100%">
                                             <thead>
                                                 <tr>
+                                                    <th>#</th>
                                                     <th>Tipo de Documento</th>
                                                     <th>Documento</th>
                                                     <th>Nombre</th>
@@ -91,6 +95,7 @@ $numeroSesion = $_SESSION['id_usuario'];
                                                     <th>Cuando Se Solicito</th>
                                                     <th>Quien Solicita</th>
                                                     <th>Estado</th>
+                                                    <th>Acción</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="registros">
@@ -123,6 +128,57 @@ $numeroSesion = $_SESSION['id_usuario'];
     <script src="../assets/js/main.min.js"></script>
     <script src="../assets/js/custom.js"></script>
     <script src="../assets/js/pages/datatables.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(document).on("submit",".validarContraUsuario", function (e){
+                e.preventDefault();
+
+                var idUsuario = $(this).find(".idUsuario").val();
+                var id_solicitud = $(this).find(".id_solicitud").val();
+                var contrasena = $(this).find(".contra").val();
+
+                $.ajax({
+                    url: 'validarContraUsu.php',
+                    type: 'POST',
+                    data: {
+                        idUsuario:idUsuario,
+                        id_solicitud:id_solicitud,
+                        contrasena:contrasena
+                    },
+                    dataType: "json",
+                    success: function(response) {
+                        if (response.status == "success") {
+                            $(".contraModal").modal('hide');
+                            $(".contra").val("");
+                            Swal.fire({
+                                html: `
+                                    <div class='modal-header'>
+                                        <h5 class='modal-title' id='exampleModalLabel'>Datos</h5>
+                                    </div>
+                                    <div class='modal-body'>
+                                        <label for='labelUsuario' class='form-label'>Usuario:</label>
+                                        <input type='text' class='form-control' aria-describedby='emailHelp' value="${response.dato1}" style='background-color: white;' disabled><br>
+                                        <label for='labelContrasena' class='form-label'>Contraseña:</label>
+                                        <input type='text' class='form-control' aria-describedby='emailHelp' value="${response.dato2}" style='background-color: white;' disabled><br>
+                                        <label for='labelComen' class='form-label'>Comentario:</label>
+                                        <textarea class='form-control' style='background-color: white;' disabled>${response.dato3}</textarea>
+                                    </div>
+                                `,
+                                confirmButtonText: "Cerrar"
+                            });
+                        } else if (response.status == "error") {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error",
+                                text: response.message
+                            });
+                        }
+                    }
+                });
+                
+            });
+        });
+    </script>
 </body>
 
 </html>

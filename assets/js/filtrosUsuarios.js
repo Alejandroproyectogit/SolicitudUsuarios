@@ -40,6 +40,13 @@ $(document).ready(function () {
             cargarDatos();
         }
     );
+
+    $(".borrarFiltro").on("click", function (){
+        $("#asignarFiltro").val("TODO");
+        $("#fechaInicio").val("");
+        $("#fechaFin").val("");
+        cargarDatos();
+    });
 });
 
 
