@@ -19,7 +19,7 @@ $(document).ready(function () {
 
                 /* Se agregan los registros al id "#agregar-registros" activando DataTables, este id se encuenta en user/vistaAdmin */
 
-                $("#agregar-registros").html(datos);
+                
                 if ($.fn.dataTable.isDataTable('#tabla')) {
                     $('#tabla').DataTable().destroy();
                     $("#agregar-registros").html(datos);
@@ -29,7 +29,8 @@ $(document).ready(function () {
                         },
                         order: [[0, 'desc']]
                     });
-                }else{
+                }else if(!$.fn.dataTable.isDataTable('#tabla')){
+                    $("#agregar-registros").html(datos);
                     $('#tabla').DataTable({
                         language: {
                             url: "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"

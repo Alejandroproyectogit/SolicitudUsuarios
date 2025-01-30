@@ -138,6 +138,4 @@ if ($result) {
         };
         echo "</tr>";
     }
-} else {
-    echo "<tr><td colspan='13' class='text-center'>No hay resultados.</td></tr>";
 }
