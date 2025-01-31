@@ -1,23 +1,35 @@
 <?php
+/* Obtenemos la conexión */
 require "../conexion/conexion.php";
+
+/* Iniciamos sesión */
 session_start();
+
+/* Definimos zona horaria */
 date_default_timezone_set('America/Bogota');
+
+/* Definimos variables y obtenemos los datos de los filtros enviados por post */
 
 $fechaInicio = $_POST["fechaInicio"];
 $fechaFin = $_POST["fechaFin"];
 $estado = $_POST["estado"];
 
 if (empty($fechaInicio)) {
+    /* si el campo $fechaInicio esta vacio, le damos el valor de la $fechaFin */
     $fechaInicio = $fechaFin;
 }
 if (empty($fechaFin)) {
+    /* si el campo $fechaFin esta vacio, le damos el valor de la $fechaInicio */
     $fechaFin = $fechaInicio;
 }
+
+/* Si los dos campos de las fechas estan vacios, se coloca por defecto el rango de fecha del mes actual */
 if (empty($fechaInicio) && empty($fechaFin)) {
     $fechaInicio = date("Y-m-01");
     $fechaFin = date("Y-m-t");
 }
 
+/* Creamos la consulta SQL para la busqueda en base a los filtros */
 $sql = "SELECT
             s.id_solicitud,
             s.tipoDocumento,
@@ -41,18 +53,26 @@ $sql = "SELECT
             s.id_sistema = sis.id
         ";
 if ($estado === 'PENDIENTE') {
+    /* Si el filtro de estado es igual a PENDIENTE entonces añadira lo siguente en la consulta SQL */
     $sql .= " WHERE s.estado = '$estado' AND s.fechaSolicitud BETWEEN '$fechaInicio' AND '$fechaFin' ORDER BY s.id_solicitud DESC";
 } elseif ($estado === 'CREADO') {
+    /* Si el filtro de estado es igual a CREADO entonces añadira lo siguente en la consulta SQL */
     $sql .= " WHERE s.estado = '$estado' AND s.fechaSolicitud BETWEEN '$fechaInicio' AND '$fechaFin' ORDER BY s.id_solicitud DESC";
 } elseif ($estado === 'TODO') {
+    /* Si el filtro de estado es igual a TODO entonces añadira lo siguente en la consulta SQL */
     $sql .= " WHERE s.fechaSolicitud BETWEEN '$fechaInicio' AND '$fechaFin' ORDER BY s.id_solicitud DESC";
 }
+
+/* Preparamos y ejecutamos la consulta SQL */
 $buscaRango = $con->prepare($sql);
 $buscaRango->execute();
 $result = $buscaRango->fetchAll();
 
+/* Si la consulta SQL devuelve resultados, generamos la tabla con los resultados */
 if ($result) {
+    /* Usamos un foreach para mostrar todos los resultados */
     foreach ($result as $fila) {
+        /* Aqui obtenemos cada dato de los campos de la BD */
         echo "<tr>
             <td>" . $fila['id_solicitud'] . "</td>
             <td>" . $fila['tipoDocumento'] . "</td>
@@ -69,9 +89,10 @@ if ($result) {
             <td>" . $fila['estado'] . "</td>
             <td>" . $fila['fechaSolicitud'] . "</td>
         ";
+        /* Aqui se genera el botón del modal para responder a la solicitud, solo si el estado es PENDIENTE */
         if ($fila['estado'] == 'PENDIENTE') {
             echo "<td>
-                    <!-- Button trigger modal -->
+                    <!-- Boton que abre el modal -->
                     <button type='button' class='btn btn-success align-middle' data-bs-toggle='modal' data-bs-target='#exampleModal{$fila['id_solicitud']}'>
                         <span class='bi bi-check'></span>
                     </button>
@@ -80,6 +101,9 @@ if ($result) {
                     <div class='modal fade' id='exampleModal{$fila['id_solicitud']}' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
                         <div class='modal-dialog'>
                             <div class='modal-content'>
+
+                                <!-- Formulario para responder a la solicitud -->
+
                                 <form class='formRespuestaSolicitud'>
                                     <div class='modal-header'>
                                         <h5 class='modal-title' id='exampleModalLabel'>Información del Usuario Creado</h5>
@@ -108,8 +132,9 @@ if ($result) {
                     </div>
                 </td>";
         } else {
+            /* Si el estado de la solucitud es igual a CREADO, entonces, aparecera el boton para abrir el modal de la validación de la contraseña, para ver las credenciales */ 
             echo "<td>
-                    <!-- Button trigger modal -->
+                    <!-- Boton que abre el modal -->
                     <button type='button' class='btn btn-dark align-middle' data-bs-toggle='modal' data-bs-target='#verInfo{$fila['id_solicitud']}'>
                         <span class='bi bi-eye'></span>
                     </button>
@@ -117,6 +142,9 @@ if ($result) {
                     <div class='modal fade contraModal' id='verInfo{$fila['id_solicitud']}' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
                         <div class='modal-dialog modal-dialog-centered'>
                             <div class='modal-content'>
+
+                                <!-- formulario para enviar la contraseña -->
+
                                 <form class='validarContra'>
                                     <div class='modal-header'>
                                         <h5 class='modal-title' id='exampleModalLabel'>Contraseña</h5>
@@ -139,3 +167,4 @@ if ($result) {
         echo "</tr>";
     }
 }
+/* Si no hay resultados, se mostrara el "no hay datos" que tiene por defecto el DataTables */

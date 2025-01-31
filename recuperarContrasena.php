@@ -50,6 +50,8 @@
 
             <div class="divider"></div>
 
+            <!-- Formulario Para Recibir El Correo Del Usuario -->
+
             <form id="formRecuContra">
                 <div class="auth-credentials m-b-xxl">
                     <label for="signInEmail" class="form-label">Correo Electronico</label>
@@ -58,7 +60,11 @@
                 </div>
 
                 <div class="auth-submit">
+
+                    <!-- Envia Formulario Y Se Activa El Script -->
                     <button type="submit" class="btn btn-primary">Enviar</button>
+
+                    <!-- Link para ir al inicio de sesión -->
                     <a href="index.php" class="auth-forgot-password float-end">Iniciar Sesión</a>
                 </div>
             </form>
@@ -78,19 +84,27 @@
     <script>
         $(document).ready(function() {
 
-
+            /* Codigo que se activa cuando se envia el formulario #formRecuContra */
             $(document).on("submit", "#formRecuContra", function(e) {
                 e.preventDefault();
+
+                // Recibimos el valor del id #correo
                 var correo = $("#correo").val();
+
+                // Hacemos una peticion AJAX para enviar el correo al backend
                 $.ajax({
+                    //Enviamos la variable "correo" por post a user/procesoRecuperacion.php en formato JSON
                     url: 'user/procesoRecuperacion.php',
                     type: 'POST',
                     data: {
                         correo: correo
                     },
                     dataType: 'json',
+                    //recibimos la respuesta
                     success: function(response) {
                         if (response.status == "success") {
+                            // Se respondera una variable "status" del archivo user/procesoRecuperacion.php, y si su valor es igual a "success" se mostrara la alerta de exito
+
                             const Toast = Swal.mixin({
                                 toast: true,
                                 position: "top-end",
@@ -106,6 +120,7 @@
                                 icon: "success",
                                 title: "Se Envio Un Codigo A Tu Correo"
                             });
+                            // Luego se cambia el formulario que tiene el input del correo al formulario en donde se pide el codigo de recuperación de contraseña
                             document.getElementById("formularioCorreo").innerHTML = `
                                 <div class="logo">
                                     <a href="index.html">Recuperar Contraseña</a>
@@ -127,7 +142,9 @@
                                 </form>
                                 <div class="divider"></div>
                             `;
+                        
                         } else if (response.status == "error"){
+                            //Si el archivo user/procesoRecuperacion.php responde que la variable status es igual a error, saldra la alerta de error
                             const Toast = Swal.mixin({
                                 toast: true,
                                 position: "top-end",
@@ -148,19 +165,27 @@
                 });
             });
 
+            //Este codigo se ejecuta cuando se envia el formulario #formRecuContra2, este formulario se encuentra en el innerHTML de arriba
             $(document).on("submit", "#formRecuContra2", function(evento) {
                 evento.preventDefault();
 
+                //Se obtiene el valor del input codigo
                 var codigo = $("#codigo").val();
+                
+                //Se hace una peticion AJAX para validar el codigo del usuario
                 $.ajax({
+                    //Se envia la variable "codigo" por post a user/validarCodigo.php en formato JSON
                     url: 'user/validarCodigo.php',
                     type: 'POST',
                     data: {
                         codigo: codigo
                     },
                     dataType: 'json',
+                    //Se recibe la respuesta
                     success: function(response) {
                         if (response.status == "success") {
+                            // Se respondera una variable "status" del archivo user/validarCodigo.php, y si su valor es igual a "success" se cambiara el formulario formRecuContra2 al formulario formRecuContra3.
+                            //En este formulario se pide la nueva contraseña y se confirma la misma
                             document.getElementById("formularioCorreo").innerHTML = `
                                 <div class="logo">
                                     <a href="index.html">Recuperar Contraseña</a>
@@ -185,6 +210,7 @@
                                 <div class="divider"></div>
                             `;
                         } else if (response.status == "error") {
+                            // Si el archivo user/validarCodigo.php responde que la variable status es igual a error, se mostrara la alerta de error
                             const Toast = Swal.mixin({
                                 toast: true,
                                 position: "top-end",
@@ -201,6 +227,7 @@
                                 title: response.message
                             });
                         } else if (response.status == "errorCodigo") {
+                            // Si el archivo user/validarCodigo.php responde que la variable status es igual a errorCodigo, es porque venció el codigo, se mostrara la alerta de error.
                             const Toast = Swal.mixin({
                                 toast: true,
                                 position: "top-end",
@@ -216,6 +243,7 @@
                                 icon: "error",
                                 title: response.message
                             }).then(() => {
+                                //Despues se enviara nuevamente al apartado de recuperar contraseña para que genere otro codigo
                                 window.location.href = 'recuperarContrasena.php';
                             });
                         }
@@ -223,11 +251,15 @@
                 });
             });
 
+            //Este codigo se ejecuta cuando se envia el formulario #formRecuContra3, este formulario se encuentra en el innerHTML de arriba
             $(document).on("submit", "#formRecuContra3", function(event) {
                 event.preventDefault();
 
+                //Se obtienen los valores de la contraseña nueva y de la confirmación
                 var nuevaPass = $("#nuevaPass").val();
                 var confirmPass = $("#confirmPass").val();
+
+                //Se envian las variables por AJAX al archivo user/actualizarContrasena.php por post en formato JSON
 
                 $.ajax({
                     url: 'user/actualizarContrasena.php',
@@ -237,7 +269,9 @@
                         confirmPass: confirmPass
                     },
                     dataType: 'json',
+                    //Se recibe la respuesta
                     success: function(response) {
+                        //Si el archivo user/actualizarContrasena.php responde que la variable status es igual a success, se mostrara la alerta de exito y redireccionara al inicio de sesion
                         if (response.status == "success") {
                             Swal.fire({
                                 icon: 'success',
@@ -248,7 +282,9 @@
                                     window.location.href = 'index.php';
                                 }
                             });
+                        
                         } else if (response.status == "error") {
+                            //Si el archivo user/actualizarContrasena.php responde que la variable status es igual a error, se mostrara la alerta de error
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',

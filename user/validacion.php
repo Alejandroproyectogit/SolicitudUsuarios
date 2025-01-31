@@ -40,6 +40,7 @@ if (!empty($usuario) && !empty($pass)) {
 
                 //"id_rol = 1" significa Administrator, si el usuario tiene este "id_Rol" y su "estado" es "ACTIVO" y "vencimientoClave" es mayor a la actual, entonces, dejara ingresar a user/vistaAdmin.php
 
+                // Definimos variables globales para el manejo de sesiones
                 $_SESSION['id_usuario'] = $result["id"];
                 $_SESSION['usuario'] = $result["usuario"];
                 $_SESSION['nombre'] = $result["nombre"];
@@ -50,6 +51,7 @@ if (!empty($usuario) && !empty($pass)) {
 
                 //"id_rol = 2" significa Usuario, si el usuario tiene este "id_Rol" y su "estado" es "ACTIVO" y "vencimientoClave" es mayor a la actual, entonces, dejara ingresar a user/vistaUsuarios.php
 
+                // Definimos variables globales para el manejo de sesiones
                 $_SESSION['id_usuario'] = $result["id"];
                 $_SESSION['usuario'] = $result["usuario"];
                 $_SESSION['nombre'] = $result["nombre"];

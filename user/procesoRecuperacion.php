@@ -1,5 +1,7 @@
 <?php
 
+//Obtenemos el archivo de conexión y los archivos de la libreria PHPMailer
+
 require "../conexion/conexion.php";
 require "../assets/plugins/PHPMailer/Exception.php";
 require "../assets/plugins/PHPMailer/PHPMailer.php";
@@ -8,32 +10,37 @@ require "../assets/plugins/PHPMailer/SMTP.php";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+//Obtenemos el correo que se envio del archivo recuperarContrasena.php
 $correo = $_POST["correo"];
 
+//Validamos que no este vacio
 if (!empty($correo)){
+    //Buscamos si el correo existe en la BD, utilizamos un SELECT para obtener el id y el correo
     $buscarCorreo = $con->prepare("SELECT id,correoUsuarios FROM usuarios WHERE correoUsuarios = :corr");
     $buscarCorreo->bindParam(":corr",$correo, PDO::PARAM_STR);
     $buscarCorreo->execute();
     $resultado = $buscarCorreo->fetch();
 
+    //Si se encuentra la información se ejecutara lo siguiente
     if ($resultado){
-        $correo = $resultado["correoUsuarios"];
-        $numero_aleatorio = random_int(10000, 99999);
-        $oMail = new PHPMailer();
+        
+        $correo = $resultado["correoUsuarios"]; //Guardamos el correo de la BD en la variable $correo
+        $numero_aleatorio = random_int(10000, 99999); //Generamos un número aleatorio para el código de recuperación
+        $oMail = new PHPMailer(); //Se llama la clase PHPMailer que es de la libreria
         $oMail->isSMTP();
         $oMail->Host = 'smtp.gmail.com';
         $oMail->Port = 587;
         $oMail->SMTPSecure = 'tls';
         $oMail->SMTPAuth = true;
-        $oMail->Username = 'pepeperez123prueba@gmail.com';
-        $oMail->Password = 'avcb fahj hxvh qypb';
+        $oMail->Username = 'pepeperez123prueba@gmail.com'; //Aqui se coloca el correo que enviara todos los correos
+        $oMail->Password = 'avcb fahj hxvh qypb'; //Aqui se coloca la contraseña del correo
         $oMail->setFrom('pepeperez123prueba@gmail.com', 'Clinaltec');
-        $oMail->addAddress($correo);
-        $oMail->CharSet = 'UTF-8';
+        $oMail->addAddress($correo); //Este sera el correo destinatario
+        $oMail->CharSet = 'UTF-8'; //Definimos UTF-8 para que no hayan conflictos con caracteres como la "Ñ"
         $oMail->isHTML(true); // Indicamos que el contenido es HTML
         $oMail->Subject = 'Codigo de Recuperación';
 
-        // Cuerpo del correo HTML con estilos CSS y una imagen
+        // Cuerpo del correo HTML con estilos CSS
         $oMail->Body = "
         <!DOCTYPE html>
         <html lang='es'>
@@ -111,20 +118,21 @@ if (!empty($correo)){
         ";
 
 
-            
+        //Se valida si se envia el correo
         if ($oMail->send()) {
+            //Si el correo se envia correctamente, generamos la sesion
             session_start();
             $_SESSION["idUsuRec"] = $resultado["id"];
-            $_SESSION["codigoGenerado"] = $numero_aleatorio;
-            $_SESSION["timestampGenerado"] = time();
+            $_SESSION["codigoGenerado"] = $numero_aleatorio; //Guardamos el código generado en una SESSION
+            $_SESSION["timestampGenerado"] = time(); //Creamos una SESSION con time para el vencimiento del codigo, nos da el momento en que se genero el codigo
             
-            echo json_encode(["status" => "success", "message" => "Se Envio un codigo a tu correo"]);
+            echo json_encode(["status" => "success", "message" => "Se Envio un codigo a tu correo"]); //Se responde un Success con su mensaje para mostrar la alerta en recuperarContrasena.php
         }
     } else {
-        echo json_encode(["status" => "error", "message" => "Usuario no encontrado"]);
+        echo json_encode(["status" => "error", "message" => "Usuario no encontrado"]);//Si no se encuentra la información arroja error
     }
 }else{
-    echo json_encode(["status" => "error", "message" => "Campo Vacío"]);
+    echo json_encode(["status" => "error", "message" => "Campo Vacío"]);//Si el campo esta vacio arroja error
 }
 
 ?>

@@ -1,25 +1,36 @@
 <?php
+/* Obtenemos la conexión */
 require "../conexion/conexion.php";
+
+/* Iniciamos sesión */
 session_start();
+
+/* Definimos zona horaria */
 date_default_timezone_set('America/Bogota');
 
+/* Definimos variables y obtenemos los datos de los filtros enviados por post */
 $fechaInicio = $_POST["fechaInicio"];
 $fechaFin = $_POST["fechaFin"];
 $estado = $_POST["estado"];
-$id = $_POST["numeroSesion"];
+$id = $_POST["numeroSesion"];//obtenemos el id del usuario logueado
 
 
 if (empty($fechaInicio)) {
+    /* si el campo $fechaInicio esta vacio, le damos el valor de la $fechaFin */
     $fechaInicio = $fechaFin;
 }
 if (empty($fechaFin)) {
+    /* si el campo $fechaFin esta vacio, le damos el valor de la $fechaInicio */
     $fechaFin = $fechaInicio;
 }
+
+/* Si los dos campos de las fechas estan vacios, se coloca por defecto el rango de fecha del mes actual */
 if (empty($fechaInicio) && empty($fechaFin)) {
     $fechaInicio = date("Y-m-01");
     $fechaFin = date("Y-m-t");
 }
 
+/* Creamos la consulta SQL para la busqueda en base a los filtros */
 $sql = "SELECT
             s.id_solicitud,
             s.tipoDocumento,
@@ -43,21 +54,28 @@ $sql = "SELECT
             s.id_sistema = sis.id";
 
 if ($estado == 'PENDIENTE') {
+    /* Si el filtro de estado es igual a PENDIENTE entonces añadira lo siguente en la consulta SQL */
     $sql .= " WHERE s.estado = '$estado' AND s.QuienSolicita = '$id' AND s.fechaSolicitud BETWEEN '$fechaInicio' AND '$fechaFin' ORDER BY s.id_solicitud DESC";
 }
 elseif ($estado == 'CREADO') {
+    /* Si el filtro de estado es igual a CREADO entonces añadira lo siguente en la consulta SQL */
     $sql .= " WHERE s.estado = '$estado' AND s.QuienSolicita = '$id' AND s.fechaSolicitud BETWEEN '$fechaInicio' AND '$fechaFin' ORDER BY s.id_solicitud DESC";
 }
 elseif ($estado == 'TODO') {
+    /* Si el filtro de estado es igual a TODO entonces añadira lo siguente en la consulta SQL */
     $sql .= " WHERE s.QuienSolicita = '$id' AND s.fechaSolicitud BETWEEN '$fechaInicio' AND '$fechaFin' ORDER BY s.id_solicitud DESC";
 }
 
+/* Preparamos y ejecutamos la consulta SQL */
 $preparar = $con->prepare($sql);
 $preparar->execute();
 $resultado = $preparar->fetchAll();
 
+/* Si la consulta SQL devuelve resultados, generamos la tabla con los resultados */
 if ($resultado) {
+    /* Usamos un foreach para mostrar todos los resultados */
     foreach ($resultado as $fila) {
+        /* Aqui obtenemos cada dato de los campos de la BD */
         echo "
             <tr>
             <td>".$fila["id_solicitud"]."</td>
@@ -75,8 +93,10 @@ if ($resultado) {
             <td>".$fila["nombre"]."</td>
             <td>".$fila["estado"]."</td>";
             if ($fila["estado"] == "PENDIENTE"){
+                /* Aqui se genera un icono de pendiente, solo si el estado es PENDIENTE */
                 echo "<td><p class='btn btn-light align-middle'><span class='bi bi-clock-fill'></span></p></td>";
             }else{
+                /* Si el estado de la solucitud es igual a CREADO, entonces, aparecera el boton para abrir el modal de la validación de la contraseña, para ver las credenciales */
                 echo "<td>
                     <!-- Button trigger modal -->
                     <button type='button' class='btn btn-dark align-middle' data-bs-toggle='modal' data-bs-target='#verInfo{$fila['id_solicitud']}'>
@@ -108,5 +128,5 @@ if ($resultado) {
             "</tr>";
     }
 }
-
+/* Si no hay resultados, se mostrara el "no hay datos" que tiene por defecto el DataTables */
 ?>

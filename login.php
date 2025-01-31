@@ -62,7 +62,7 @@
                     }
                 }
             ?>
-                <a href="index.html">ClinalTec</a>
+                <a href="#">ClinalTec</a>
             </div>
             
             <div class="divider"></div>
@@ -79,7 +79,9 @@
                 </div>
 
                 <div class="auth-submit">
+                    <!-- Botón para enviar los datos al index.php -->
                     <button type="submit" class="btn btn-primary">Ingresar</button>
+                    <!-- Link para ir a la página recuperar contraseña que seria el archivo recuperarContrasena.php -->
                     <a href="recuperarContrasena.php" class="auth-forgot-password float-end">¿Olvidaste tu contraseña?</a>
                 </div>
             </form>

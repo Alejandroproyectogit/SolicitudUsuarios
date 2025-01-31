@@ -2,10 +2,14 @@
 
 session_start();
 
+//Se valida si la variable "$_SESSION['id_usuario']" no esta vacia y no es null, si esta vacia o es null, no dejara acceder a esta vista.
+
 if (!isset($_SESSION['id_usuario'])) {
     header('Location: ../index.php');
     exit();
 }
+
+//Se almacena la variable "$_SESSION['id_usuario']" en $numeroSesion, para despues enviar la misma y obtener solo las solicitudes que ha hecho este usuario.
 $numeroSesion = $_SESSION['id_usuario'];
 
 ?>
@@ -25,6 +29,7 @@ $numeroSesion = $_SESSION['id_usuario'];
                 <a href="#" class="logo-icon"><span class="logo-text">Clinaltec</span></a>
                 <div class="sidebar-user-switcher user-activity-online">
                     <a href="#">
+                        <!--Se obtiene la varible "$_SESSION['nombre']" para saludar al usuario-->
                         <span class="user-info-text">Bienvenid@ <?php echo $_SESSION['nombre']; ?> <br><span class="user-state-info">Usuario</span><span class="activity-indicator"></span></span>
                     </a>
                 </div>
@@ -50,6 +55,9 @@ $numeroSesion = $_SESSION['id_usuario'];
                         </div>
                     </div>
                     <div class="d-flex justify-content-between">
+
+                        <!-- Filtro Estado -->
+
                         <div class="filtroEstado">
                             <label for="exampleFormControlInput1">Filtrar por estado:</label>
                             <select id="asignarFiltro" name="asignarFiltro" class="form-select" aria-label="Default select example">
@@ -58,6 +66,9 @@ $numeroSesion = $_SESSION['id_usuario'];
                                 <option value="CREADO">Realizados</option>
                             </select>
                         </div>
+
+                        <!-- Filtro por fechas -->
+
                         <div class="fechaInicio">
                             <label for="exampleFormControlInput1">Fecha Inicio:</label>
                             <input type="date" id="fechaInicio" class="form-control flatpickr1">
@@ -67,9 +78,15 @@ $numeroSesion = $_SESSION['id_usuario'];
                             <label for="exampleFormControlInput1">Fecha Final:</label>
                             <input type="date" id="fechaFin" class="form-control flatpickr1">
                         </div>
+
+                        <!-- Boton que borra los filtros ingresados -->
+
                         <div class="btnReset">
                             <button class="btn btn-info mt-4 borrarFiltro"><i class="bi bi-arrow-repeat"></i></button>
                         </div>
+
+                        <!-- Enviar dato del usuario para solo mostrar las solicitudes de ese usuario -->
+
                         <input type="hidden" id="numeroSesion" value="<?php echo $numeroSesion?>">
                     </div>
                     <div class="divider"></div>
@@ -78,6 +95,9 @@ $numeroSesion = $_SESSION['id_usuario'];
                             <div class="card">
                                 <div class="card-body">
                                     <div class="table-responsive">
+
+                                        <!-- Tabla en donde apareceran las solicitudes que fueron creadas por el usuario -->
+
                                         <table id="tabla" class="table" class="display" style="width:100%">
                                             <thead>
                                                 <tr>
@@ -98,6 +118,7 @@ $numeroSesion = $_SESSION['id_usuario'];
                                                     <th>Acción</th>
                                                 </tr>
                                             </thead>
+                                            <!-- Aqui apareceran los registros de la BD -->
                                             <tbody id="registros">
                                                 
                                             </tbody>
@@ -118,6 +139,9 @@ $numeroSesion = $_SESSION['id_usuario'];
     <!-- Javascripts -->
     <script src="../assets/plugins/jquery/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- A este archivo se enviaran los datos de los filtros -->
+
     <script src="../assets/js/filtrosUsuarios.js"></script>
     <script src="../assets/plugins/bootstrap/js/popper.min.js"></script>
     <script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
@@ -130,13 +154,18 @@ $numeroSesion = $_SESSION['id_usuario'];
     <script src="../assets/js/pages/datatables.js"></script>
     <script>
         $(document).ready(function() {
+
+            /* Este codigo se ejecuta cuando se envia el formulario .validarContraUsuario, este formulario se encuentra en filtrarVistaUsuarios.php */
             $(document).on("submit",".validarContraUsuario", function (e){
                 e.preventDefault();
 
+                /* Utilizamos $(this).find() para que no hayan conflictos al obtener los datos, ya que, el formulario se encuentra en un foreach */
+                /* Obtenemos los datos */
                 var idUsuario = $(this).find(".idUsuario").val();
                 var id_solicitud = $(this).find(".id_solicitud").val();
                 var contrasena = $(this).find(".contra").val();
 
+                /* Se envia una solicitud AJAX, en donde enviamos los datos por POST y en formato JSON al archivo "validarContraUsu.php" */
                 $.ajax({
                     url: 'validarContraUsu.php',
                     type: 'POST',
@@ -146,10 +175,16 @@ $numeroSesion = $_SESSION['id_usuario'];
                         contrasena:contrasena
                     },
                     dataType: "json",
+
+                    /* Recibimos la respuesta AJAX */
                     success: function(response) {
+                        /* El archivo "validarContraUsu.php", respondera una variable "status", si esta variable es igual a "success", pasara lo siguiente: */
                         if (response.status == "success") {
+                            /* Ocultamos el modal */
                             $(".contraModal").modal('hide');
-                            $(".contra").val("");
+                            $(".contra").val("");//Limpiamos el input con clase ".contra".
+
+                            /* Se mostrara una alerta con la información de usuario, contraseña y comentario */
                             Swal.fire({
                                 html: `
                                     <div class='modal-header'>
@@ -167,6 +202,7 @@ $numeroSesion = $_SESSION['id_usuario'];
                                 confirmButtonText: "Cerrar"
                             });
                         } else if (response.status == "error") {
+                            /* El archivo "validarContraUsu.php", respondera una variable "status", si esta variable es igual a "error", el programa arrojara una alerta con el error que se responde */
                             Swal.fire({
                                 icon: "error",
                                 title: "Error",

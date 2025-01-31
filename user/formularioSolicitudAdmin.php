@@ -1,11 +1,15 @@
 <?php
 
+
 session_start();
 
+//Se valida si la variable "$_SESSION['id_usuario']" no esta vacia y no es null, si esta vacia o es null, no dejara acceder a esta vista.
 if (!isset($_SESSION['id_usuario'])) {
     header('Location: ../index.php');
     exit();
 }
+
+//Si la variable "$_SESSION['id_rol'] == 2" entonces no dejara acceder a esta vista.
 if ($_SESSION['id_rol'] == 2) {
     header('Location: vistaUsuarios.php');
     exit();
@@ -28,6 +32,7 @@ if ($_SESSION['id_rol'] == 2) {
                 <div class="sidebar-user-switcher user-activity-online">
                     <a href="#">
                         <span class="activity-indicator"></span>
+                        <!--Se obtiene la varible "$_SESSION['nombre']" para saludar al usuario-->
                         <span class="user-info-text">Bienvenid@ <?php echo $_SESSION['nombre']; ?> <br><span class="user-state-info">Administrador</span><span class="activity-indicator"></span></span>
                     </a>
                 </div>
@@ -58,6 +63,9 @@ if ($_SESSION['id_rol'] == 2) {
                                 <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
                                     <div class="card">
                                         <div class="card-body">
+
+                                            <!-- Formulario para que el administrador pueda realizar una solicitud -->
+
                                             <form id="formSolicitudAdmin">
                                                 <div class="row">
                                                     <div class="col-md-6">
@@ -105,6 +113,7 @@ if ($_SESSION['id_rol'] == 2) {
                                                             <button type="button" class="btn btn-info dropdown-toggle form-control" data-bs-toggle="dropdown" aria-expanded="false">
                                                                 Sistemas requeridos
                                                             </button>
+                                                            <!-- Aqui se incluye el archivo en donde se encuentran los checks de los diferentes sistemas -->
                                                             <?php require "elegirSistema.php"; ?>
                                                         </div>
                                                     </div>
@@ -120,7 +129,12 @@ if ($_SESSION['id_rol'] == 2) {
                                                         <input type="text" class="form-control" id="settingsPhoneNumber" name="documentoUsuCopia" placeholder="xxxxxxxxxx">
                                                     </div>
                                                 </div>
+
+                                                <!-- Se envia el dato del usuario logueado para saber quien solicita -->
+
                                                 <input type="text" name="solicitante" value="<?php echo $_SESSION["id_usuario"]; ?>" hidden>
+
+                                                <!-- Por defecto se envia en PENDIENTE -->
                                                 <input type="text" name="estado" value="PENDIENTE" hidden>
                                                 <div class="row m-t-lg">
                                                     <div class="col">
@@ -152,35 +166,43 @@ if ($_SESSION['id_rol'] == 2) {
     <script src="../assets/js/main.min.js"></script>
     <script src="../assets/js/custom.js"></script>
     <script>
+
+        /* Este codigo se ejecuta cuando se envia el formulario "#formSolicitudAdmin" */
         $("#formSolicitudAdmin").submit(function(evento) {
             evento.preventDefault();
 
+            /* Serializamos todos los datos del formulario */
             const datosFormulario = $(this).serialize();
 
+            /* Se envia una solicitud AJAX, en donde enviamos los datos por POST y en formato JSON al archivo "ProcesarSolicitudAdmin.php" */
             $.ajax({
                 url: "ProcesarSolicitudAdmin.php",
                 type: "POST",
                 data: datosFormulario,
                 dataType: "json",
+
+                /* Recibimos la respuesta del archivo "ProcesarSolicitudAdmin.php" */
                 success: function(response) {
+                    /* El archivo "ProcesarSolicitudAdmin.php" respondera una variable llamada "status", si su valor es igual a "success", entonces, aparecera la alerta de exito*/
                     if (response.status == "success") {
                         Swal.fire({
                             title: "EXITO",
                             text: response.message,
                             icon: "success"
                         }).then(() => {
+                            /* Despues se recarga la pagina */
                             location.reload();
                         });
                     } else if (response.status == "error") {
+                        /* El archivo "ProcesarSolicitudAdmin.php" respondera una variable llamada "status", si su valor es igual a "error", entonces, aparecera la alerta de error*/
                         Swal.fire({
                             title: "ERROR",
                             text: response.message,
                             icon: "error"
-                        }).then(() => {
-                            location.reload();
                         });
                     }
                 },
+                /* Si hubo un error en el servidor, aparecera la alerta de error */
                 error: function(xhr, status, error) {
                     Swal.fire({
                         title: "ERROR",

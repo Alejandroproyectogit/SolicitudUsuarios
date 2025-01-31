@@ -1,7 +1,9 @@
 <?php
+
+/* Obtenemos la conexión */
 require "../conexion/conexion.php";
 
-// Obtener los valores directamente de $_POST
+/* Obtenemos los datos que se enviaron por post */
 $tipoDocumento = $_POST["tipoDocumento"];
 $nDocumento = $_POST["nDocumento"];
 $nombres = $_POST["nombres"];
@@ -9,20 +11,22 @@ $apellidos = $_POST["apellidos"];
 $telefono = $_POST["telefono"];
 $correo = $_POST["correo"];
 $cargo = $_POST["cargo"];
-$sistemas = isset($_POST["sistemas"]) ? $_POST["sistemas"] : [];
-$nombreUsuCopia = !empty($_POST["nombreUsuCopia"]) ? $_POST["nombreUsuCopia"] : null;
-$documentoUsuCopia = !empty($_POST["documentoUsuCopia"]) ? $_POST["documentoUsuCopia"] : null;
+$sistemas = isset($_POST["sistemas"]) ? $_POST["sistemas"] : [];//Realizamos un operador ternario
+$nombreUsuCopia = !empty($_POST["nombreUsuCopia"]) ? $_POST["nombreUsuCopia"] : null;//Realizamos un operador ternario
+$documentoUsuCopia = !empty($_POST["documentoUsuCopia"]) ? $_POST["documentoUsuCopia"] : null;//Realizamos un operador ternario
 $solicitante = $_POST["solicitante"];
 $estado = $_POST["estado"];
 
+/* Validamos que los datos recibidos no estén vacíos */
 if (
     !empty($tipoDocumento) && !empty($nDocumento) && !empty($nombres) &&
     !empty($apellidos) && !empty($telefono) && !empty($correo) && !empty($cargo) &&
     !empty($sistemas) && !empty($solicitante) && !empty($estado)
 ) {
-
+    /* Usamos un foreach para hacer una inserción para cada sistema que se selecciono */
     foreach ($sistemas as $sistema) {
 
+        /* Preparamos la consulta para insertar los datos en la base de datos */
         $insertSolicitud = $con->prepare("INSERT INTO solicitudes 
             (
             tipoDocumento, 
@@ -52,6 +56,7 @@ if (
             :soli,
             :estado);");
         
+        /* Usamos bindParam para evitar inyecciones sql */
         $insertSolicitud->bindParam(":tipo", $tipoDocumento, PDO::PARAM_STR);
         $insertSolicitud->bindParam(":nDoc", $nDocumento, PDO::PARAM_INT);
         $insertSolicitud->bindParam(":nom", $nombres, PDO::PARAM_STR);
@@ -59,21 +64,25 @@ if (
         $insertSolicitud->bindParam(":telf", $telefono, PDO::PARAM_STR);
         $insertSolicitud->bindParam(":correo", $correo, PDO::PARAM_STR);
         $insertSolicitud->bindParam(":cargo", $cargo, PDO::PARAM_STR);
-        $insertSolicitud->bindParam(":sis", $sistema, PDO::PARAM_INT);  // Asegúrate de que el tipo sea correcto (en este caso, debería ser entero)
+        $insertSolicitud->bindParam(":sis", $sistema, PDO::PARAM_INT);  
         $insertSolicitud->bindParam(":nomUsuCopia", $nombreUsuCopia, PDO::PARAM_STR);
         $insertSolicitud->bindParam(":docUsuCopia", $documentoUsuCopia, PDO::PARAM_INT);
         $insertSolicitud->bindParam(":soli", $solicitante);
         $insertSolicitud->bindParam(":estado", $estado, PDO::PARAM_STR);
         
+        /* Ejecutamos la consulta */
         $resultado = $insertSolicitud->execute();
     }
 
+    /* Si la consulta se ejecutó correctamente, respondemos con éxito */
     if ($resultado) {
         echo json_encode(["status" => "success", "message" => "Solicitud Registrada"]);
     } else {
+        /* Respondemos error si no se ralizó la inserción */
         echo json_encode(["status" => "error", "message" => "Algo Salio Mal"]);
     }
 } else {
+    /* Respondemos error si los datos recibidos están vacíos */
     echo json_encode(["status" => "error", "message" => "Datos vacíos"]);
 }
 ?>

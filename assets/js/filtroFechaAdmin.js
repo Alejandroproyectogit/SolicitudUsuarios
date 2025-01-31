@@ -4,9 +4,14 @@ $(document).ready(function () {
 
     function cargarDatos() {
         
+        /* Recibimos los campos de los filtros */
+
         var fechaInicio = $("#fechaInicio").val();
         var fechaFin = $("#fechaFin").val();
         var estado = $("#asignarFiltro").val();
+
+        /* Se envian los datos por post en una petición AJAX al archivo ../user/buscarRangoFechas.php */
+
         $.ajax({
             type: "POST",
             url: "../user/buscarRangoFechas.php",
@@ -15,11 +20,12 @@ $(document).ready(function () {
                 fechaFin: fechaFin,
                 estado: estado
             },
+
+            /* Se obtiene la respuesta */
+
             success: function (datos) {
-
-                /* Se agregan los registros al id "#agregar-registros" activando DataTables, este id se encuenta en user/vistaAdmin */
-
                 
+                /* Se valida si hay una DataTable Inicializada para destruirla, agregar los registros y inicializar un DataTable nuevo para esos registros obtenidos */
                 if ($.fn.dataTable.isDataTable('#tabla')) {
                     $('#tabla').DataTable().destroy();
                     $("#agregar-registros").html(datos);
@@ -30,6 +36,7 @@ $(document).ready(function () {
                         order: [[0, 'desc']]
                     });
                 }else if(!$.fn.dataTable.isDataTable('#tabla')){
+                    /* Si no hay ningun DataTable inicializado, se agregaran los registros al id #agregar-registros y se inicializara un DataTable para esos registros obtenidos */
                     $("#agregar-registros").html(datos);
                     $('#tabla').DataTable({
                         language: {
@@ -43,6 +50,7 @@ $(document).ready(function () {
         return false;
     }
 
+    /* Llamamos la función */
     cargarDatos();
 
     /* Aqui tenemos el codigo que se ejecuta cuando se cambia algun input de los filtros y llama la función para enviar esos cambios hechos en los inputs */
