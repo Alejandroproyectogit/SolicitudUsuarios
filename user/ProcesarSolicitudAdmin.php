@@ -3,6 +3,19 @@
 /* Obtenemos la conexión */
 require "../conexion/conexion.php";
 
+// Datos para desencriptar
+define('ENCRYPTION_KEY', 'ABwVQ$gYH2Xn^QjfadEEB9LzuT!yinb%'); // 32 caracteres
+define('IV', '1234567890abcdef'); // 16 caracteres
+
+/* Función para desencriptar */
+
+function decrypt($data)
+{
+    $cipher = "AES-256-CBC";
+    $decodedData = urldecode($data); // Decodificar desde la URL
+    return openssl_decrypt($decodedData, $cipher, ENCRYPTION_KEY, 0, IV);
+}
+
 /* Obtenemos los datos que se enviaron por post */
 $tipoDocumento = $_POST["tipoDocumento"];
 $nDocumento = $_POST["nDocumento"];
@@ -14,7 +27,11 @@ $cargo = $_POST["cargo"];
 $sistemas = isset($_POST["sistemas"]) ? $_POST["sistemas"] : [];//Realizamos un operador ternario
 $nombreUsuCopia = !empty($_POST["nombreUsuCopia"]) ? $_POST["nombreUsuCopia"] : null;//Realizamos un operador ternario
 $documentoUsuCopia = !empty($_POST["documentoUsuCopia"]) ? $_POST["documentoUsuCopia"] : null;//Realizamos un operador ternario
+
+/* Dato encriptado para desencriptar */
 $solicitante = $_POST["solicitante"];
+$solicitante = decrypt($solicitante);
+
 $estado = $_POST["estado"];
 
 /* Validamos que los datos recibidos no estén vacíos */

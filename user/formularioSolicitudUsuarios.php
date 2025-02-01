@@ -1,11 +1,28 @@
 <?php
 
+/* Se abre una session para obtener las variables super globales "$_SESSION" */
 session_start();
 
+//Se valida si la variable "$_SESSION['id_usuario']" no esta vacia y no es null, si esta vacia o es null, no dejara acceder a esta vista.
 if (!isset($_SESSION['id_usuario'])) {
     header('Location: ../index.php');
     exit();
 }
+
+// Datos para encriptar
+define('ENCRYPTION_KEY', 'ABwVQ$gYH2Xn^QjfadEEB9LzuT!yinb%'); // 32 caracteres
+define('IV', '1234567890abcdef'); // 16 caracteres
+
+/* Encriptamos el dato del id del usuario */
+function encrypt($data)
+{
+    $cipher = "AES-256-CBC";
+    $encrypted = openssl_encrypt($data, $cipher, ENCRYPTION_KEY, 0, IV);
+    return urlencode($encrypted); // Codificar para URL
+}
+
+$idUsuario = $_SESSION["id_usuario"];
+$idUsuario = encrypt($idUsuario);
 
 ?>
 
@@ -24,6 +41,7 @@ if (!isset($_SESSION['id_usuario'])) {
                 <div class="sidebar-user-switcher user-activity-online">
                     <a href="#">
                         <span class="activity-indicator"></span>
+                        <!--Se obtiene la varible para saludar al usuario-->
                         <span class="user-info-text">Bienvenid@ <?php echo $_SESSION['nombre']; ?> <br><span class="user-state-info">Usuario</span><span class="activity-indicator"></span></span>
                     </a>
                 </div>
@@ -54,6 +72,9 @@ if (!isset($_SESSION['id_usuario'])) {
                                 <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
                                     <div class="card">
                                         <div class="card-body">
+
+                                            <!--Formulario Para Que El Usuario Cree Una Solicitud-->
+
                                             <form id="formSolicitudUsuario">
                                                 <div class="row">
                                                     <div class="col-md-6">
@@ -101,6 +122,9 @@ if (!isset($_SESSION['id_usuario'])) {
                                                             <button type="button" class="btn btn-info dropdown-toggle form-control" data-bs-toggle="dropdown" aria-expanded="false">
                                                                 Sistemas requeridos
                                                             </button>
+
+                                                            <!-- Aqui se incluye el archivo en donde se encuentran los checks de los diferentes sistemas -->
+
                                                             <?php require "elegirSistema.php"; ?>
                                                         </div>
                                                     </div>
@@ -116,7 +140,7 @@ if (!isset($_SESSION['id_usuario'])) {
                                                         <input type="text" class="form-control" id="settingsPhoneNumber" name="documentoUsuCopia" placeholder="xxxxxxxxxx">
                                                     </div>
                                                 </div>
-                                                <input type="text" name="solicitante" value="<?php echo $_SESSION["id_usuario"]; ?>" hidden>
+                                                <input type="text" name="solicitante" value="<?php echo $idUsuario; ?>" hidden>
                                                 <input type="text" name="estado" value="PENDIENTE" hidden>
                                                 <div class="row m-t-lg">
                                                     <div class="col">
@@ -148,26 +172,35 @@ if (!isset($_SESSION['id_usuario'])) {
     <script src="../assets/js/main.min.js"></script>
     <script src="../assets/js/custom.js"></script>
     <script>
+
+        /* Este codigo se ejecuta cuando el formulario "#formSolicitudUsuario" se envia */
         $("#formSolicitudUsuario").submit(function(evento) {
             evento.preventDefault();
 
+            /* Serializamos todos los datos del formulario */
             const datosFormulario = $(this).serialize();
 
+            /* Se envia una solicitud AJAX, en donde enviamos los datos por POST y en formato JSON al archivo "ProcesarSolicitudUsuarios.php" */
             $.ajax({
                 url: "ProcesarSolicitudUsuarios.php",
                 type: "POST",
                 data: datosFormulario,
                 dataType: "json",
+                
+                /* Recibimos la respuesta del archivo "ProcesarSolicitudUsuarios.php" */
                 success: function(response) {
+                    /* El archivo "ProcesarSolicitudUsuarios.php" respondera una variable llamada "status" si esa variable es igual a "success", aparecera la alerta de exito */
                     if (response.status == "success") {
                         Swal.fire({
                             title: "EXITO",
                             text: response.message,
                             icon: "success"
                         }).then(() => {
+                            /* Despues se recargara la pagina */
                             location.reload();
                         });
                     } else if (response.status == "error") {
+                        /* El archivo "ProcesarSolicitudUsuarios.php", respondera una variable llamada "status" y si su valor es igual a "error", entonces, se mostrara la alerta de error */
                         Swal.fire({
                             title: "ERROR",
                             text: response.message,
@@ -177,6 +210,7 @@ if (!isset($_SESSION['id_usuario'])) {
                         });
                     }
                 },
+                /* Si hubo un error en el servidor, aparecera la alerta de error */
                 error: function(xhr, status, error) {
                     Swal.fire({
                         title: "ERROR",

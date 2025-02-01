@@ -8,12 +8,27 @@ session_start();
 /* Definimos zona horaria */
 date_default_timezone_set('America/Bogota');
 
+// Datos para desencriptar
+define('ENCRYPTION_KEY', 'ABwVQ$gYH2Xn^QjfadEEB9LzuT!yinb%'); // 32 caracteres
+define('IV', '1234567890abcdef'); // 16 caracteres
+
+/* Función para desencriptar */
+
+function decrypt($data)
+{
+    $cipher = "AES-256-CBC";
+    $decodedData = urldecode($data); // Decodificar desde la URL
+    return openssl_decrypt($decodedData, $cipher, ENCRYPTION_KEY, 0, IV);
+}
+
 /* Definimos variables y obtenemos los datos de los filtros enviados por post */
 $fechaInicio = $_POST["fechaInicio"];
 $fechaFin = $_POST["fechaFin"];
 $estado = $_POST["estado"];
-$id = $_POST["numeroSesion"];//obtenemos el id del usuario logueado
 
+/* Dato que recibimos encriptado para desencriptar */
+$id = $_POST["numeroSesion"];//obtenemos el id del usuario logueado
+$id = decrypt($id);
 
 if (empty($fechaInicio)) {
     /* si el campo $fechaInicio esta vacio, le damos el valor de la $fechaFin */

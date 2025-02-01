@@ -15,6 +15,21 @@ if ($_SESSION['id_rol'] == 2) {
     exit();
 }
 
+// Datos para encriptar
+define('ENCRYPTION_KEY', 'ABwVQ$gYH2Xn^QjfadEEB9LzuT!yinb%'); // 32 caracteres
+define('IV', '1234567890abcdef'); // 16 caracteres
+
+/* Encriptamos el dato del id del usuario */
+function encrypt($data)
+{
+    $cipher = "AES-256-CBC";
+    $encrypted = openssl_encrypt($data, $cipher, ENCRYPTION_KEY, 0, IV);
+    return urlencode($encrypted); // Codificar para URL
+}
+
+$idUsuario = $_SESSION["id_usuario"];
+$idUsuario = encrypt($idUsuario);
+
 ?>
 
 <!DOCTYPE html>
@@ -32,7 +47,7 @@ if ($_SESSION['id_rol'] == 2) {
                 <div class="sidebar-user-switcher user-activity-online">
                     <a href="#">
                         <span class="activity-indicator"></span>
-                        <!--Se obtiene la varible "$_SESSION['nombre']" para saludar al usuario-->
+                        <!--Se obtiene la varible para saludar al usuario-->
                         <span class="user-info-text">Bienvenid@ <?php echo $_SESSION['nombre']; ?> <br><span class="user-state-info">Administrador</span><span class="activity-indicator"></span></span>
                     </a>
                 </div>
@@ -132,7 +147,7 @@ if ($_SESSION['id_rol'] == 2) {
 
                                                 <!-- Se envia el dato del usuario logueado para saber quien solicita -->
 
-                                                <input type="text" name="solicitante" value="<?php echo $_SESSION["id_usuario"]; ?>" hidden>
+                                                <input type="text" name="solicitante" value="<?php echo $idUsuario; ?>" hidden>
 
                                                 <!-- Por defecto se envia en PENDIENTE -->
                                                 <input type="text" name="estado" value="PENDIENTE" hidden>

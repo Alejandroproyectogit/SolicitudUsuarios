@@ -32,7 +32,7 @@ if ($_SESSION['id_rol'] == 2) {
                 <a href="#" class="logo-icon"><span class="logo-text">Clinaltec</span></a>
                 <div class="sidebar-user-switcher user-activity-online">
                     <a href="#">
-                        <!--Se obtiene la varible "$_SESSION['nombre']" para saludar al usuario-->
+                        <!--Se obtiene la varible para saludar al usuario-->
                         <span class="user-info-text">Bienvenid@ <?php echo $_SESSION['nombre']; ?> <br><span class="user-state-info">Administrador</span><span class="activity-indicator"></span></span>
                     </a>
                 </div>
