@@ -172,8 +172,7 @@ if ($_SESSION['id_rol'] == 2) {
                     /* Si confirman el envio del formulario, se obtienen los datos del mismo formulario */
                     if (result.isConfirmed) {
                         /* Utilizamos $(this).find() para que no hayan conflictos al obtener los datos, ya que, el formulario se encuentra en un foreach */
-                        const id_solicitud = $(this).find(".id_solicitud").val();
-                        const idUsuRespuesta = $(this).find(".idUsuRespuesta").val(); 
+                        const id_solicitud = $(this).find(".id_solicitud").val(); 
                         const nomSistema = $(this).find(".nomSistema").val();                        
                         const usuario = $(this).find(".usuario").val();
                         const contrasena = $(this).find(".contrasena").val();
@@ -185,7 +184,6 @@ if ($_SESSION['id_rol'] == 2) {
                             url: "enviarInfoUsuarioSoli.php",
                             data: {                            
                                 id_solicitud: id_solicitud,
-                                idUsuRespuesta: idUsuRespuesta,
                                 nomSistema: nomSistema,
                                 usuario: usuario,
                                 contrasena: contrasena,

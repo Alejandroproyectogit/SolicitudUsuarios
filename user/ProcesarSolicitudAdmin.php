@@ -33,6 +33,9 @@ $solicitante = $_POST["solicitante"];
 $solicitante = decrypt($solicitante);
 
 $estado = $_POST["estado"];
+if ($estado != "PENDIENTE"){
+    $estado = "PENDIENTE";
+}
 
 /* Validamos que los datos recibidos no estén vacíos */
 if (

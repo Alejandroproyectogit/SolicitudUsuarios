@@ -12,7 +12,6 @@ define('IV', '1234567890abcdef'); // 16 caracteres
 $cipher = "AES-256-CBC";
 
 $id = $_POST["id_solicitud"];
-$idUsuRespuesta = $_POST["idUsuRespuesta"];
 $nomSistema = $_POST["nomSistema"];
 $usuario = $_POST["usuario"];
 $contrasena = $_POST["contrasena"];
@@ -22,10 +21,9 @@ if (empty($comentario)) {
     $comentario = "NINGUN COMENTARIO";
 }
 
-if (!empty($idUsuRespuesta) && !empty($id) && !empty($usuario) && !empty($contrasena)) {
+if (!empty($id) && !empty($usuario) && !empty($contrasena)) {
     $encrypted = openssl_encrypt($contrasena, $cipher, ENCRYPTION_KEY, 0, IV);
-    $stmt = $con->prepare("UPDATE solicitudes SET idUsuRespuesta = :idUsuRespuesta, usuario = :usuarioRes, contrasena = :contRes, comentario = :comentarioRes, estado = 'CREADO' WHERE id_solicitud = :id");
-    $stmt->bindParam(":idUsuRespuesta", $idUsuRespuesta, PDO::PARAM_INT);
+    $stmt = $con->prepare("UPDATE solicitudes SET usuario = :usuarioRes, contrasena = :contRes, comentario = :comentarioRes, estado = 'CREADO' WHERE id_solicitud = :id");
     $stmt->bindParam(":id", $id, PDO::PARAM_INT);
     $stmt->bindParam(":usuarioRes", $usuario, PDO::PARAM_STR);
     $stmt->bindParam(":contRes", $encrypted);
@@ -177,7 +175,7 @@ if (!empty($idUsuRespuesta) && !empty($id) && !empty($usuario) && !empty($contra
 
 
 /* // Datos para desencriptar
-define('ENCRYPTION_KEY', 'sI3peyUCdfsdfsdfsA'); // 32 caracteres
+define('ENCRYPTION_KEY', 'ABwVQ$gYH2Xn^QjfadEEB9LzuT!yinb%'); // 32 caracteres
 define('IV', '1234567890abcdef'); // 16 caracteres
 
 // Función para desencriptar

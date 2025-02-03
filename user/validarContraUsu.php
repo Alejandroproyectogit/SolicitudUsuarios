@@ -7,10 +7,19 @@ require "../conexion/conexion.php";
 
 define('ENCRYPTION_KEY', 'ABwVQ$gYH2Xn^QjfadEEB9LzuT!yinb%'); // 32 caracteres
 define('IV', '1234567890abcdef'); // 16 caracteres
-$cipher = "AES-256-CBC";//Formato de encriptación
+
+/* funcion para desencriptar */
+function decrypt($data)
+{
+    $cipher = "AES-256-CBC";
+    $decodedData = urldecode($data); // Decodificar desde la URL
+    return openssl_decrypt($decodedData, $cipher, ENCRYPTION_KEY, 0, IV);
+}
 
 /* Recibimos los datos que se envian del formulario que se encuentra en filtrarVistaUsuarios.php */
 $idUsuario = $_POST['idUsuario'];
+$idUsuario = decrypt($idUsuario);
+
 $id_solicitud = $_POST['id_solicitud'];
 $contrasena = $_POST['contrasena'];
 
@@ -36,14 +45,16 @@ if (!empty($idUsuario) && !empty($id_solicitud) && !empty($contrasena)) {
             if($resultSol) {
                 /* Almacenamos la información de la solicitud de la BD en variables */
                 $usuario = $resultSol["usuario"];
+
+            /* Desencriptamos la contraseña para mostrarla al usuario */
                 $contra = $resultSol["contrasena"];
+                $contra = decrypt($contra);
                 $comentario = $resultSol["comentario"];
 
-                /* Desencriptamos la contraseña de la solicitud */
-                $decrypt = openssl_decrypt($contra, $cipher, ENCRYPTION_KEY, 0, IV);
+                
                 
                 /* Enviamos la información de la solicitud en formato JSON */
-                echo json_encode(["status" => "success", "dato1" => $usuario, "dato2" => $decrypt, "dato3" => $comentario]);
+                echo json_encode(["status" => "success", "dato1" => $usuario, "dato2" => $contra, "dato3" => $comentario]);
             
             } else {
                 /* Enviamos un error si no encontramos resultados de la información de la solicitud */

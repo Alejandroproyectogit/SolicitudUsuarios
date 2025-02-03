@@ -89,6 +89,7 @@ if ($_SESSION['id_rol'] == 2) {
                                                     <div class="col-md-6">
                                                         <label for="settingsInputFirstName" class="form-label">correo</label>
                                                         <input type="text" class="form-control" id="correo" name="correo" required>
+                                                        <div id="avisoCorreo" class="avisoCorreo text-danger"></div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="settingsInputFirstName" class="form-label">Usuario</label>
@@ -177,6 +178,13 @@ if ($_SESSION['id_rol'] == 2) {
                         }).then(() => {
                             location.reload();
                         });
+                    } else if (resultado.message == 2) {
+                        Swal.fire({
+                            title: "ERROR",
+                            text: "El documento, el usuario o el correo ya existe.",
+                            icon: "error"
+                        });
+
                     } else if (resultado.message == 3) {
                         Swal.fire({
                             title: "ERROR",
@@ -185,15 +193,6 @@ if ($_SESSION['id_rol'] == 2) {
                         }).then(() => {
                             location.reload();
                         });
-                    } else if (resultado.message == 2) {
-                        /*Swal.fire({
-                            title: "ERROR",
-                            text: "Usuario Ya Existe",
-                            icon: "error"
-                        });*/
-                        const idAviso = document.getElementById("aviso");
-                        idAviso.innerText = "Ya Existe El Usuario Con Esta Cedula";
-
                     }
                 })
                 .catch((error) => {
@@ -253,20 +252,46 @@ if ($_SESSION['id_rol'] == 2) {
                             $("#avisoUsuario").html("Usuario Existente");
                             $("#avisoUsuario").removeClass("text-success");
                             $("#avisoUsuario").addClass("text-danger");
-                            $("#enviar").attr('disabled',true);
                         } else {
                             $(".avisoUsuario").css("display", "flex");
                             $("#avisoUsuario").html("Usuario Valido");
                             $("#avisoUsuario").removeClass("text-danger");
                             $("#avisoUsuario").addClass("text-success");
-                            $("#enviar").attr('disabled',false);
                         }
                     }
                 })
             }else{
                 $(".aviso").css("display", "none");
-                $(".avisoUsuario").css("display", "none");
 
+            }
+        });
+        $("#correo").on("keyup",function (){
+            var correoLongitud = $("#correo").val().length;
+            var correo = $("#correo").val();
+
+            if (correoLongitud > 2){
+                $.ajax({
+                    url: "validarCorreo.php",
+                    type: "POST",
+                    data: {
+                        correo:correo
+                    },
+                    success: function(response) {
+                        if (response == 1){
+                            $(".avisoCorreo").css("display", "flex");
+                            $("#avisoCorreo").html("El Correo Ya Existe");
+                            $("#avisoCorreo").removeClass("text-success");
+                            $("#avisoCorreo").addClass("text-danger");
+                        }else{
+                            $(".avisoCorreo").css("display", "flex");
+                            $("#avisoCorreo").html("Correo Valido");
+                            $("#avisoCorreo").removeClass("text-danger");
+                            $("#avisoCorreo").addClass("text-success");
+                        }
+                    }
+                });
+            }else{
+                $(".avisoCorreo").css("display", "none");
             }
         });
     </script>

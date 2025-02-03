@@ -8,6 +8,21 @@ session_start();
 /* Definimos zona horaria */
 date_default_timezone_set('America/Bogota');
 
+/* Constantes para encriptar */
+define('ENCRYPTION_KEY', 'ABwVQ$gYH2Xn^QjfadEEB9LzuT!yinb%'); // 32 caracteres
+define('IV', '1234567890abcdef'); // 16 caracteres
+
+/* Definimos función para encriptar */
+function encrypt($data)
+{
+    $cipher = "AES-256-CBC";
+    $encrypted = openssl_encrypt($data, $cipher, ENCRYPTION_KEY, 0, IV);
+    return urlencode($encrypted); // Codificar para URL
+}
+
+$idUsuario = $_SESSION['id_usuario'];
+$idUsuario = encrypt($idUsuario);
+
 /* Definimos variables y obtenemos los datos de los filtros enviados por post */
 
 $fechaInicio = $_POST["fechaInicio"];
@@ -112,7 +127,6 @@ if ($result) {
                                     <div class='divider'></div>
                                     <div class='modal-body'>
                                         <input type='hidden' class='id_solicitud' value='{$fila['id_solicitud']}'>
-                                        <input type='hidden' class='idUsuRespuesta' value='{$_SESSION['id_usuario']}'>
                                         <input type='hidden' class='nomSistema' value='{$fila['nombreSistema']}'>
                                         <h5 class='modal-title' id='exampleModalLabel'>Sistema: <span class='modal-title badge badge-style-light rounded-pill badge-warning'>{$fila['nombreSistema']}</span></h5>
                                         <div class='divider'></div>
@@ -151,7 +165,7 @@ if ($result) {
                                         <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
                                     </div>
                                     <div class='modal-body'>
-                                        <input type='hidden' class='idUsuResp' value='{$_SESSION['id_usuario']}'>
+                                        <input type='hidden' class='idUsuResp' value='{$idUsuario}'>
                                         <input type='hidden' class='id_solicitud' value='{$fila['id_solicitud']}'>
                                         <input type='password' class='contra form-control form-control-solid-bordered' aria-describedby='emailHelp' required>
                                     </div>

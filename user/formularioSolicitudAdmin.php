@@ -94,7 +94,7 @@ $idUsuario = encrypt($idUsuario);
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="settingsPhoneNumber" class="form-label">Documento</label>
-                                                        <input type="text" class="form-control" id="settingsPhoneNumber" name="nDocumento" placeholder="xxxxxxxxxx" required>
+                                                        <input type="text" class="form-control" id="settingsPhoneNumber" name="nDocumento" maxlength="10" placeholder="xxxxxxxxxx" required>
                                                     </div>
                                                 </div>
                                                 <div class="row m-t-lg">
@@ -110,7 +110,7 @@ $idUsuario = encrypt($idUsuario);
                                                 <div class="row m-t-lg">
                                                     <div class="col-md-6">
                                                         <label for="settingsPhoneNumber" class="form-label">Telefono</label>
-                                                        <input type="text" class="form-control" id="settingsPhoneNumber" name="telefono" placeholder="(xxx) xxx-xxxx" required>
+                                                        <input type="text" class="form-control" id="settingsPhoneNumber" name="telefono" maxlength="10" placeholder="(xxx) xxx-xxxx" required>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="settingsInputEmail" class="form-label">Correo</label>
@@ -141,7 +141,7 @@ $idUsuario = encrypt($idUsuario);
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="settingsPhoneNumber" class="form-label">Documento del Usuario a Copiar</label>
-                                                        <input type="text" class="form-control" id="settingsPhoneNumber" name="documentoUsuCopia" placeholder="xxxxxxxxxx">
+                                                        <input type="text" class="form-control" id="settingsPhoneNumber" maxlength="10" name="documentoUsuCopia" placeholder="xxxxxxxxxx">
                                                     </div>
                                                 </div>
 

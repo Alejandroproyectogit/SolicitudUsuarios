@@ -21,9 +21,11 @@ if ($data) {
         !empty($apellidos) && !empty($correo) && !empty($usuario) && !empty($contrasena) &&
         !empty($cargo) && !empty($area) && !empty($id_rol)
     ) {
-        $sql = "SELECT * FROM usuarios WHERE documento = :nDoc";
+        $sql = "SELECT documento, usuario, correoUsuarios FROM usuarios WHERE documento = :nDoc OR usuario = :usu OR correoUsuarios = :correo";
         $sentencia = $con->prepare($sql);
         $sentencia->bindParam(":nDoc", $nDocumento, PDO::PARAM_STR);
+        $sentencia->bindParam(":correo", $correo, PDO::PARAM_STR);
+        $sentencia->bindParam(":usu", $usuario, PDO::PARAM_STR);
         $sentencia->execute();
         $resultado = $sentencia->fetchColumn();
 

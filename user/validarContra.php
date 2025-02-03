@@ -9,8 +9,18 @@ define('ENCRYPTION_KEY', 'ABwVQ$gYH2Xn^QjfadEEB9LzuT!yinb%'); // 32 caracteres
 define('IV', '1234567890abcdef'); // 16 caracteres
 $cipher = "AES-256-CBC"; //Formato de encriptación
 
+/* Función para desencriptar */
+function decrypt($data,$cipher)
+{
+    $decodedData = urldecode($data); // Decodificar desde la URL
+    return openssl_decrypt($decodedData, $cipher, ENCRYPTION_KEY, 0, IV);
+}
+
 /* Recibimos los datos que se envian del formulario que se encuentra en buscarRangoFechas.php */
+/* Dato a desencriptar */
 $idUsuResp = $_POST['idUsuResp'];
+$idUsuResp = decrypt($idUsuResp,$cipher);
+
 $id_solicitud = $_POST['id_solicitud'];
 $contrasena = $_POST['contrasena'];
 
@@ -27,29 +37,25 @@ if (!empty($idUsuResp) && !empty($id_solicitud) && !empty($contrasena)) {
         /* Verificamos que la contraseña sea correcta */
         if (password_verify($contrasena, $dato["contrasena"])) {
             /* Si la contraseña coincide, preparamos y ejecutamos la consulta para obtener los datos de la solicitud */
-            $val = $con->prepare("SELECT idUsuRespuesta, usuario, contrasena, comentario FROM solicitudes WHERE id_solicitud = :id_solicitud");
+            $val = $con->prepare("SELECT usuario, contrasena, comentario FROM solicitudes WHERE id_solicitud = :id_solicitud");
             $val->bindParam(":id_solicitud", $id_solicitud, PDO::PARAM_INT);
             $val->execute();
             $resultSol = $val->fetch();
 
             /* Si obtenemos datos de la solicitud */
             if($resultSol) {
-                /* Verificamos que el id del usuario que respondió la solicitud, sea el mismo que envió el formulario */
-                if ($resultSol["idUsuRespuesta"] == $idUsuResp){
-                    /* Si lo anterior se cumple, entonces almacenamos la información de la solicitud de la BD en variables */
-                    $usuario = $resultSol["usuario"];
-                    $contra = $resultSol["contrasena"];
-                    $comentario = $resultSol["comentario"];
-                    
-                    /* Desencriptamos la contraseña de la solicitud */
-                    $decrypt = openssl_decrypt($contra, $cipher, ENCRYPTION_KEY, 0, IV);
-                    
-                    /* Enviamos la información de la solicitud en formato JSON */
-                    echo json_encode(["status" => "success", "dato1" => $usuario, "dato2" => $decrypt, "dato3" => $comentario]);
-                } else {
-                    /* Si el id del usuario que respondió la solicitud, no es el mismo que envió el formulario, enviamos un mensaje de error */
-                    echo json_encode(["status" => "error", "message" => "No Puedes Ver Esta Información"]);
-                }
+                
+                /* Si lo anterior se cumple, entonces almacenamos la información de la solicitud de la BD en variables */
+                $usuario = $resultSol["usuario"];
+                $contra = $resultSol["contrasena"];
+                $comentario = $resultSol["comentario"];
+                
+                /* Desencriptamos la contraseña de la solicitud */
+                $decrypt = openssl_decrypt($contra, $cipher, ENCRYPTION_KEY, 0, IV);
+                
+                /* Enviamos la información de la solicitud en formato JSON */
+                echo json_encode(["status" => "success", "dato1" => $usuario, "dato2" => $decrypt, "dato3" => $comentario]);
+                
             } else {
                 /* Si no obtenemos datos de la solicitud, enviamos un mensaje de error */
                 echo json_encode(["status" => "error", "message" => "Error Al Ver Información"]);

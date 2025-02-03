@@ -21,14 +21,27 @@ function decrypt($data)
     return openssl_decrypt($decodedData, $cipher, ENCRYPTION_KEY, 0, IV);
 }
 
+/* funcion para encriptar */
+function encrypt($data)
+{
+    $cipher = "AES-256-CBC";
+    $encrypted = openssl_encrypt($data, $cipher, ENCRYPTION_KEY, 0, IV);
+    return urlencode($encrypted); // Codificar para URL
+}
+
 /* Definimos variables y obtenemos los datos de los filtros enviados por post */
 $fechaInicio = $_POST["fechaInicio"];
 $fechaFin = $_POST["fechaFin"];
 $estado = $_POST["estado"];
 
+/* encriptamos la sesion para enviar el dato y validar la contraseña para ver las credenciales */
+$idSesion = $_SESSION["id_usuario"];
+$idSesion = encrypt($idSesion);
+
 /* Dato que recibimos encriptado para desencriptar */
 $id = $_POST["numeroSesion"];//obtenemos el id del usuario logueado
 $id = decrypt($id);
+
 
 if (empty($fechaInicio)) {
     /* si el campo $fechaInicio esta vacio, le damos el valor de la $fechaFin */
@@ -127,7 +140,7 @@ if ($resultado) {
                                         <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
                                     </div>
                                     <div class='modal-body'>
-                                        <input type='hidden' class='idUsuario' value='{$_SESSION['id_usuario']}'>
+                                        <input type='hidden' class='idUsuario' value='{$idSesion}'>
                                         <input type='hidden' class='id_solicitud' value='{$fila['id_solicitud']}'>
                                         <input type='password' class='contra form-control form-control-solid-bordered' aria-describedby='emailHelp' required>
                                     </div>
